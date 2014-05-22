@@ -1,0 +1,93 @@
+bin/ProGenMain.class
+bin/commands/NewProjectTest.class
+bin/electronics/logic/entities/AndGate.class
+bin/electronics/logic/entities/Entity.class
+bin/electronics/logic/entities/OrGate.class
+bin/electronics/logic/helper/Connection.class
+bin/electronics/logic/helper/ElectronicsLogicFacade.class
+bin/electronics/logic/helper/EntityRecorder.class
+bin/electronics/logic/helper/Project.class
+bin/electronics/logic/helper/Signal.class
+bin/electronics/logic/helper/SignalBus.class
+bin/electronics/logic/helper/Simulator.class
+bin/entities/AndGateTest.class
+bin/entities/EntityTest.class
+bin/entities/OrGateTest.class
+bin/helper/CommandNotFoundException.class
+bin/helper/Consts$CommandInputText.class
+bin/helper/Consts$CommandResults.class
+bin/helper/Consts$ConsoleUIConstants.class
+bin/helper/Consts$ExceptionMessages.class
+bin/helper/Consts.class
+bin/helper/ProcGenException.class
+bin/logic/Command.class
+bin/logic/CommandFactory.class
+bin/logic/CommandManager.class
+bin/logic/LogicFacade.class
+bin/logic/UndoableCommand.class
+bin/logic/commandslist/NewEntityCommand.class
+bin/logic/commandslist/NewProjectCommand.class
+bin/logic/commandslist/UndoCommand.class
+bin/testng.xml
+bin/userinterface/ConsoleUI.class
+test-output/failed.png
+test-output/index.html
+test-output/jquery-1.7.1.min.js
+test-output/junitreports/TEST-entities.AndGateTest.xml
+test-output/junitreports/TEST-entities.EntityTest.xml
+test-output/junitreports/TEST-entities.OrGateTest.xml
+test-output/navigator-bullet.png
+test-output/old/Default suite/Default test.properties
+test-output/old/Default suite/classes.html
+test-output/old/Default suite/groups.html
+test-output/old/Default suite/index.html
+test-output/old/Default suite/main.html
+test-output/old/Default suite/methods-alphabetical.html
+test-output/old/Default suite/methods-not-run.html
+test-output/old/Default suite/methods.html
+test-output/old/Default suite/reporter-output.html
+test-output/old/Default suite/testng.xml.html
+test-output/old/Default suite/toc.html
+test-output/old/Failed suite [Default suite]/Default test(failed).properties
+test-output/old/Failed suite [Default suite]/classes.html
+test-output/old/Failed suite [Default suite]/groups.html
+test-output/old/Failed suite [Default suite]/index.html
+test-output/old/Failed suite [Default suite]/main.html
+test-output/old/Failed suite [Default suite]/methods-alphabetical.html
+test-output/old/Failed suite [Default suite]/methods-not-run.html
+test-output/old/Failed suite [Default suite]/methods.html
+test-output/old/Failed suite [Default suite]/reporter-output.html
+test-output/old/Failed suite [Default suite]/testng.xml.html
+test-output/old/Failed suite [Default suite]/toc.html
+test-output/old/Suite/Test.properties
+test-output/old/Suite/classes.html
+test-output/old/Suite/groups.html
+test-output/old/Suite/index.html
+test-output/old/Suite/main.html
+test-output/old/Suite/methods-alphabetical.html
+test-output/old/Suite/methods-not-run.html
+test-output/old/Suite/methods.html
+test-output/old/Suite/reporter-output.html
+test-output/old/Suite/testng.xml.html
+test-output/old/Suite/toc.html
+test-output/old/index.html
+test-output/passed.png
+test-output/skipped.png
+test-output/testng-failed.xml
+test-output/testng-reports.css
+test-output/testng-reports.js
+test-output/testng-results.xml
+test-output/testng.css
+test-output/Default suite/Default test.html
+test-output/Default suite/Default test.xml
+test-output/Default suite/testng-failed.xml
+test-output/Failed suite [Default suite]/Default test(failed).html
+test-output/Failed suite [Default suite]/Default test(failed).xml
+test-output/Failed suite [Default suite]/testng-failed.xml
+test-output/Suite/Test.html
+test-output/Suite/Test.xml
+test-output/Suite/testng-failed.xml
+test-output/bullet_point.png
+test-output/collapseall.gif
+test-output/emailable-report.html
+test-output/
