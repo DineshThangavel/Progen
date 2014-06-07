@@ -30,5 +30,16 @@ public class Consts {
 	public static class ExceptionMessages{
 		public static final String STARTING_ENTITY_NOT_NULL = "Triggering Entity of simulation cannot be null";
 		public static final String COMMAND_NOT_FOUND = "The command could not be found";
+		public static final String UNEQUAL_LENGTH_SIGNAL_ASSIGNMENT = "The signal lengths do not match for assignment";
+		public static final String INPUT_ALREADY_PRESENT = "Input with same name already present";
+		public static final String OUTPUT_ALREADY_PRESENT = "Output with same name already present";
+		public static final String SIGNAL_NOT_RECOGNISED = "Unable to recognise type of signal";
+	}
+	
+	public static class ErrorCodes{
+		public static final String SIGNAL_NOT_RECOGNISED = "100";
+		public static final String UNEQUAL_LENGTH_SIGNAL_ASSIGNMENT = "101";
+		public static final String SIGNAL_INDEX_NOT_FOUND = "102";
+		
 	}
 }

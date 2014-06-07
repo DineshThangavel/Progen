@@ -2,7 +2,11 @@
  *	Represents an Electronic entity
  *	 An enitty can be the topmost entity in a project (called baseEntity) or within other entities
  */
-package electronics.logic.entities;
+package electronics.logic.helper;
+
+import helper.Consts;
+import helper.InvalidSignalException;
+import helper.ProcGenException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +21,7 @@ public class Entity {
 
 	/**
 	 * id should be unique for every new entity that is created. This uniqueness
-	 * should be taken care of when the entity is being created
+	 * is taken care by EntityMangaer when adding the project to the entity
 	 */
 
 	private String id;
@@ -33,12 +37,12 @@ public class Entity {
 		this.name = name;
 		this.parentId = null;
 	}
-	
+
 	/*
-	 *  parentId decides if the entity is base entity
-	 *  For base entity parentId is null and this is assumed by default  
+	 * parentId decides if the entity is base entity For base entity parentId is
+	 * null and this is assumed by default
 	 */
-	public Entity(String id, String name,String parentId){
+	public Entity(String id, String name, String parentId) {
 		this.id = id;
 		this.name = name;
 		this.parentId = parentId;
@@ -52,6 +56,10 @@ public class Entity {
 		return outputList.size();
 	}
 
+	public String getId(){
+		return this.id;
+	}
+	
 	/**
 	 * This method returns a reference to the actual input signal bus
 	 * 
@@ -88,31 +96,33 @@ public class Entity {
 
 	/**
 	 * Adds an input to the input list of the entity
+	 * 
+	 * @throws ProcGenException
 	 */
-	public boolean addInput(String inputName, int signalBusWidth) {
+	public boolean addInput(String inputName, int signalBusWidth)
+			throws ProcGenException {
 
 		if (!inputList.contains(inputName)) {
 			inputList.add(new SignalBus(inputName, signalBusWidth));
 			return true;
 		}
 
-		// TODO throw exception for it
 		else
-			System.out.println("Input already present..");
-		return false;
+			throw new ProcGenException(
+					Consts.ExceptionMessages.INPUT_ALREADY_PRESENT);
 
 	}
 
-	public boolean addOutput(String outputName, int signalBusWidth) {
+	public boolean addOutput(String outputName, int signalBusWidth)
+			throws ProcGenException {
 		if (!outputList.contains(outputName)) {
 			outputList.add(new SignalBus(outputName, signalBusWidth));
 			return true;
 		}
 
-		// TODO throw exception for it
 		else
-			System.out.println("Output already present..");
-		return false;
+			throw new ProcGenException(
+					Consts.ExceptionMessages.OUTPUT_ALREADY_PRESENT);
 
 	}
 
@@ -120,9 +130,33 @@ public class Entity {
 		return true;
 	}
 
-	public SignalBus defaultBehaviour(List<SignalBus> inputList) {
+	public SignalBus defaultBehaviour(List<SignalBus> inputList)
+			throws ProcGenException {
 
 		return null;
+	}
+
+	/*
+	 * This method should only be used by entity manager Any change to the
+	 * parent entity Id will automatically update all the children entity ids
+	 */
+	protected boolean changeEntityId(String newId) {
+		this.id = newId;
+		int idCount = 1;
+		for (Entity componentEntity: this.entityList) {
+			componentEntity.changeEntityId(newId + "-" + String.valueOf(idCount));
+			idCount++;
+		}
+		return true;
+	}
+	
+	public void addChildEntity(Entity childEntity){
+		if(childEntity == null)
+			return;
+		
+		// set current entity as child's parent
+		childEntity.parentId  = this.id;
+		this.entityList.add(childEntity);
 	}
 
 }

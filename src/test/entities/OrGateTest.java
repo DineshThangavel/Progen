@@ -1,5 +1,8 @@
 package entities;
 
+import helper.InvalidSignalException;
+import helper.ProcGenException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,8 +12,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.DataProvider;
 
-import electronics.logic.entities.Entity;
 import electronics.logic.entities.OrGate;
+import electronics.logic.helper.Entity;
 import electronics.logic.helper.Signal;
 import electronics.logic.helper.SignalBus;
 
@@ -44,21 +47,31 @@ public class OrGateTest {
 		List<SignalBus> inputSignalBusList = new ArrayList<SignalBus>();
 		inputSignalBusList.add(new SignalBus("input1", 1, input1));
 		inputSignalBusList.add(new SignalBus("input2", 1, input2));
-		SignalBus orGateOutput = orGateForTest
-				.defaultBehaviour(inputSignalBusList);
-
-		Assert.assertEquals(orGateOutput.getValue().length, 1);
-		Assert.assertEquals(orGateOutput.getValue()[0], expectedValue);
+		SignalBus orGateOutput;
+		try {
+			orGateOutput = orGateForTest
+					.defaultBehaviour(inputSignalBusList);
+			Assert.assertEquals(orGateOutput.getValue().length, 1);
+			Assert.assertEquals(orGateOutput.getValue()[0], expectedValue);
+		} catch (ProcGenException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	  @DataProvider
 	  public Object[][] dpMultiWidth() {
-	    return new Object[][] {
-	      new Object[] { new SignalBus("input1","1100"),new SignalBus("input2","0001"),new SignalBus("expected","1101")},
-	      new Object[] { new SignalBus("input1","1111"),new SignalBus("input2","0001"),new SignalBus("expected","1111")},
-	      new Object[] { new SignalBus("input1","1111"),new SignalBus("input2","1111"),new SignalBus("expected","1111")},
-	      new Object[] { new SignalBus("input1","0000"),new SignalBus("input2","0011"),new SignalBus("expected","0011")},
-	    };
+	    try {
+			return new Object[][] {
+			  new Object[] { new SignalBus("input1","1100"),new SignalBus("input2","0001"),new SignalBus("expected","1101")},
+			  new Object[] { new SignalBus("input1","1111"),new SignalBus("input2","0001"),new SignalBus("expected","1111")},
+			  new Object[] { new SignalBus("input1","1111"),new SignalBus("input2","1111"),new SignalBus("expected","1111")},
+			  new Object[] { new SignalBus("input1","0000"),new SignalBus("input2","0011"),new SignalBus("expected","0011")},
+			};
+		} catch (InvalidSignalException e) {
+			Assert.fail();
+			e.printStackTrace();
+		}
+		return null;
 	  }
 	  
 	  @Test(dataProvider = "dpMultiWidth")
@@ -67,9 +80,14 @@ public class OrGateTest {
 		  
 		  inputList.add(input1);
 		  inputList.add(input2);
-		  SignalBus orGateOutput = orGateForTest.defaultBehaviour(inputList);
-		
-		  Assert.assertEquals(orGateOutput.getBusWidth(), expected.getBusWidth());
-			Assert.assertEquals(orGateOutput.getValue(),expected.getValue());
+		  SignalBus orGateOutput;
+		try {
+			orGateOutput = orGateForTest.defaultBehaviour(inputList);
+			  Assert.assertEquals(orGateOutput.getBusWidth(), expected.getBusWidth());
+				Assert.assertEquals(orGateOutput.getValue(),expected.getValue());
+		} catch (ProcGenException e) {
+			Assert.fail();
+			e.printStackTrace();
+		}
 	  }
 }

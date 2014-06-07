@@ -3,8 +3,11 @@
  */
 package electronics.logic.entities;
 
+import helper.InvalidSignalException;
+
 import java.util.List;
 
+import electronics.logic.helper.Entity;
 import electronics.logic.helper.Signal;
 import electronics.logic.helper.SignalBus;
 
@@ -23,7 +26,7 @@ public class AndGate extends Entity{
 	}
 	
 	@Override
-	public SignalBus defaultBehaviour(List<SignalBus> inputList) {
+	public SignalBus defaultBehaviour(List<SignalBus> inputList) throws InvalidSignalException {
 		SignalBus andGateOutput = new SignalBus("andGateOutput",inputList.get(0).getBusWidth());
 		andGateOutput.setValue(Signal.HIGH);
 		

@@ -3,8 +3,11 @@
  */
 package electronics.logic.entities;
 
+import helper.InvalidSignalException;
+
 import java.util.List;
 
+import electronics.logic.helper.Entity;
 import electronics.logic.helper.Signal;
 import electronics.logic.helper.SignalBus;
 
@@ -25,7 +28,7 @@ public class OrGate extends Entity {
 	}
 
 	@Override
-	public SignalBus defaultBehaviour(List<SignalBus> inputList) {
+	public SignalBus defaultBehaviour(List<SignalBus> inputList) throws InvalidSignalException {
 		SignalBus orGateOutput = new SignalBus("orGateOutput", inputList.get(0).getBusWidth());
 		orGateOutput.setValue(Signal.LOW);
 

@@ -91,3 +91,4 @@ test-output/bullet_point.png
 test-output/collapseall.gif
 test-output/emailable-report.html
 test-output/
+*.class

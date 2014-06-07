@@ -1,8 +1,11 @@
 package electronics.logic.helper;
+
+import helper.Consts;
 /**
  *  This is the enum class for modelling signals
  *  between entities
  */
+import helper.InvalidSignalException;
 
 /**
  * @author DINESH THANGAVEL
@@ -17,20 +20,21 @@ public enum Signal {
 		this.vhdlValue = vhdlValue;
 	}
 
-	public  static Signal getSignalFromString(String vhdlValue){
-		if(vhdlValue.equals("1"))
+	public static Signal getSignalFromString(String vhdlValue)
+			throws InvalidSignalException {
+		if (vhdlValue.equals("1"))
 			return Signal.HIGH;
-		
-		else if(vhdlValue.equals("0"))
+
+		else if (vhdlValue.equals("0"))
 			return Signal.LOW;
-		
-		else if(vhdlValue.equals("Z"))
+
+		else if (vhdlValue.equals("Z"))
 			return Signal.UNDEFINED;
-		
-		// TODO Invalid Signal Exception
-		return null;		
+
+		throw new InvalidSignalException(
+				Consts.ExceptionMessages.SIGNAL_NOT_RECOGNISED);
 	}
-	
+
 	public String getVhdlValue() {
 		return this.vhdlValue;
 

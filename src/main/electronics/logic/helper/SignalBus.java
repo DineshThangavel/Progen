@@ -3,6 +3,9 @@
  */
 package electronics.logic.helper;
 
+import helper.Consts;
+import helper.InvalidSignalException;
+
 /**
  * @author DINESH THANGAVEL
  * 
@@ -35,21 +38,28 @@ public class SignalBus {
 	/*
 	 * @param valueToSet- this is a binary representation as a string
 	 */
-	public SignalBus(String name, String valueToSet) {
+	public SignalBus(String name, String valueToSet) throws InvalidSignalException {
 		this.value = new Signal[valueToSet.length()];
 
 		for (int i = 0; i < valueToSet.length(); i++) {
 			String signalAtIndexi = String.valueOf(valueToSet.charAt(i));
-			setValue(Signal.getSignalFromString(signalAtIndexi), i);
+			try {
+				setValue(Signal.getSignalFromString(signalAtIndexi), i);
+			} catch (InvalidSignalException e) {
+				throw e;
+			}
 		}
 
 		this.name = name;
 	}
 
-	public boolean setValue(Signal valueToSet[]) {
-		// TODO make this an exception
+	public boolean setValue(Signal valueToSet[])
+			throws InvalidSignalException {
+
 		if (value.length != valueToSet.length)
-			return false;
+			throw new InvalidSignalException(
+					Consts.ErrorCodes.UNEQUAL_LENGTH_SIGNAL_ASSIGNMENT,
+					Consts.ExceptionMessages.UNEQUAL_LENGTH_SIGNAL_ASSIGNMENT);
 
 		for (int i = 0; i < value.length; i++) {
 			value[i] = valueToSet[i];
@@ -76,12 +86,15 @@ public class SignalBus {
 	 * 
 	 * @param valueToSet
 	 * @return
+	 * @throws InvalidSignalException
 	 */
-	public boolean setValue(Signal valueToSet, int indexToSet) {
+	public boolean setValue(Signal valueToSet, int indexToSet)
+			throws InvalidSignalException {
 
-		// TODO : Throw exception here
 		if (indexToSet > this.getBusWidth())
-			return false;
+			throw new InvalidSignalException(
+					Consts.ErrorCodes.SIGNAL_INDEX_NOT_FOUND,
+					Consts.ExceptionMessages.UNEQUAL_LENGTH_SIGNAL_ASSIGNMENT);
 
 		value[indexToSet] = valueToSet;
 		return true;
