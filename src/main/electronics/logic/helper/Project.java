@@ -16,6 +16,8 @@ import java.util.List;
 public class Project {
 	String name;
 	Simulator flowController = null;
+	EntityManager entityManager =  new EntityManager();
+	ConnectionManager connectionManager = new ConnectionManager();
 	
 	Project(String projectName){
 		this.name = projectName;

@@ -34,12 +34,15 @@ public class Consts {
 		public static final String INPUT_ALREADY_PRESENT = "Input with same name already present";
 		public static final String OUTPUT_ALREADY_PRESENT = "Output with same name already present";
 		public static final String SIGNAL_NOT_RECOGNISED = "Unable to recognise type of signal";
+		public static final String CANNOT_CONNECT_EXCEPTION = "Unable to make a connection";
+		public static final String CONNECTION_CREATION_ERROR= "New Entity is already present";
 	}
 	
 	public static class ErrorCodes{
 		public static final String SIGNAL_NOT_RECOGNISED = "100";
 		public static final String UNEQUAL_LENGTH_SIGNAL_ASSIGNMENT = "101";
 		public static final String SIGNAL_INDEX_NOT_FOUND = "102";
+		public static final String ENTITY_ALREADY_PRESENT = "103";
 		
 	}
 }

@@ -12,16 +12,16 @@ import java.util.List;
  *
  */
 public final class EntityManager {
-	List<Entity> baseEntityList = new ArrayList<Entity>();
+	HashMap<String,Entity> baseEntityMap = new HashMap<String,Entity>();
 	
 	public List<Entity> getBaseEntities(){
-		return baseEntityList;	
+		return (List<Entity>) baseEntityMap;	
 	}
 	
 	public void addBaseEntity(Entity entityToAdd){
 		String newId = generateBaseEntityId();
 		entityToAdd.changeEntityId(newId);
-		baseEntityList.add(entityToAdd);
+		baseEntityMap.put(newId,entityToAdd);
 	}
 	
 	/*
@@ -31,7 +31,15 @@ public final class EntityManager {
 	 * eg "1-1'
 	 */
 	private String generateBaseEntityId(){
-		int id = baseEntityList.size() + 1;
+		int id = baseEntityMap.size() + 1;
 		return String.valueOf(id);	
+	}
+	
+	public void addChildEntity(String parentEntityId, Entity newChildEntity){
+		
+	}
+	
+	public Entity getEntityById(String entityId){
+		
 	}
 }

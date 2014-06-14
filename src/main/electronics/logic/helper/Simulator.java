@@ -3,7 +3,6 @@
  */
 package electronics.logic.helper;
 
-import electronics.logic.entities.Entity;
 
 /**
  * @author DINESH THANGAVEL

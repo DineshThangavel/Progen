@@ -8,6 +8,7 @@ import helper.ProcGenException;
 
 import java.util.Stack;
 
+import electronics.logic.helper.Project;
 import logic.commandslist.UndoCommand;
 
 /**
@@ -17,6 +18,7 @@ import logic.commandslist.UndoCommand;
 public class CommandManager {
 
 	private Stack<Command> commandStack = new Stack<Command>();
+	private Stack<Project> projectSnapshotStack = new Stack<Project>();
 
 	public String executeCommand(Command cmd, String arguments) throws ProcGenException  {
 		String userFeedback = null;
@@ -31,6 +33,8 @@ public class CommandManager {
 
 		if (cmd instanceof UndoableCommand) {
 			commandStack.push(cmd);
+			// TODO : Keep track of project Snapshot. Ensure that project is merely copied 
+			//TODO : Implement Copy constructor
 		}
 
 		return userFeedback;
@@ -39,6 +43,7 @@ public class CommandManager {
 	public String undo() {
 		if (commandStack.empty() == false) {
 			UndoableCommand cmd = (UndoableCommand) commandStack.pop();
+			// TODO : Add poping out project state
 			return cmd.undo();
 		}
 

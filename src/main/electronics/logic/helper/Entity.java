@@ -21,15 +21,17 @@ public class Entity {
 
 	/**
 	 * id should be unique for every new entity that is created. This uniqueness
-	 * is taken care by EntityMangaer when adding the project to the entity
+	 * is taken care by EntityMangaer when adding the entity to the project
 	 */
 
 	private String id;
 	private String name;
 	private String parentId;
+	// TODO check if this can be changed to hashmap for better performance
 	private List<SignalBus> inputList = new ArrayList<SignalBus>();
 	private List<SignalBus> outputList = new ArrayList<SignalBus>();
 	private List<Entity> entityList = new ArrayList<Entity>();
+	private ConnectionManager entityConnectionManager = new ConnectionManager();
 
 	public Entity(String id, String name) {
 
@@ -56,10 +58,10 @@ public class Entity {
 		return outputList.size();
 	}
 
-	public String getId(){
+	public String getId() {
 		return this.id;
 	}
-	
+
 	/**
 	 * This method returns a reference to the actual input signal bus
 	 * 
@@ -102,7 +104,7 @@ public class Entity {
 	public boolean addInput(String inputName, int signalBusWidth)
 			throws ProcGenException {
 
-		if (!inputList.contains(inputName)) {
+		if (!isSignalPresentInInputByName(inputName)) {
 			inputList.add(new SignalBus(inputName, signalBusWidth));
 			return true;
 		}
@@ -115,7 +117,7 @@ public class Entity {
 
 	public boolean addOutput(String outputName, int signalBusWidth)
 			throws ProcGenException {
-		if (!outputList.contains(outputName)) {
+		if (!isSignalPresentInOutputByName(outputName)) {
 			outputList.add(new SignalBus(outputName, signalBusWidth));
 			return true;
 		}
@@ -124,10 +126,6 @@ public class Entity {
 			throw new ProcGenException(
 					Consts.ExceptionMessages.OUTPUT_ALREADY_PRESENT);
 
-	}
-
-	public boolean makeInvisible(Signal Input) {
-		return true;
 	}
 
 	public SignalBus defaultBehaviour(List<SignalBus> inputList)
@@ -143,20 +141,49 @@ public class Entity {
 	protected boolean changeEntityId(String newId) {
 		this.id = newId;
 		int idCount = 1;
-		for (Entity componentEntity: this.entityList) {
-			componentEntity.changeEntityId(newId + "-" + String.valueOf(idCount));
+		for (Entity componentEntity : this.entityList) {
+			componentEntity.changeEntityId(newId + "-"
+					+ String.valueOf(idCount));
 			idCount++;
 		}
 		return true;
 	}
-	
-	public void addChildEntity(Entity childEntity){
-		if(childEntity == null)
+
+	public void addChildEntity(Entity childEntity) {
+		if (childEntity == null)
 			return;
-		
+
 		// set current entity as child's parent
-		childEntity.parentId  = this.id;
+		childEntity.parentId = this.id;
 		this.entityList.add(childEntity);
+	}
+	
+	public List<SignalBus> getOutputPortList(){
+		return this.outputList;
+	}
+	
+	public List<SignalBus> getInputPortList(){
+		return this.inputList;
+	}
+	
+	public boolean isSignalPresentInInputByName(String name){
+		for(SignalBus inputSignal : inputList){
+			if(inputSignal.getName() == name){
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean isSignalPresentInOutputByName(String name){
+		for(SignalBus outputSignal : outputList){
+			if(outputSignal.getName() == name){
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 }
