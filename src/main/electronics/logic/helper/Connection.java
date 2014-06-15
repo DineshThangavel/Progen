@@ -34,6 +34,10 @@ public class Connection {
 		this.outputSignal = outputSignal;
 		this.inputOutputMapping = getMappingAsSignalFromType(connectType);
 	}
+	
+	private Connection(){
+		
+	}
 
 	/*
 	 * This method identifies the input-output mapping
@@ -49,5 +53,34 @@ public class Connection {
 			return null;
 	}
 	
+	public Connection deepCopy(){
+		Connection newConnectionCopy = new Connection();
+		newConnectionCopy.destinationEntityId = this.destinationEntityId;
+		newConnectionCopy.sourceEntityId = this.sourceEntityId;
+		newConnectionCopy.inputSignal = this.inputSignal.deepCopy();
+		newConnectionCopy.outputSignal = this.outputSignal.deepCopy();
+		newConnectionCopy.inputOutputMapping = this.inputOutputMapping.deepCopy();
 	
+		return newConnectionCopy;
+	}
+
+	public String getSourceEntityId() {
+		return sourceEntityId;
+	}
+
+	public String getDestinationEntityId() {
+		return destinationEntityId;
+	}
+
+	public SignalBus getInputSignal() {
+		return inputSignal.deepCopy();
+	}
+
+	public SignalBus getOutputSignal() {
+		return outputSignal.deepCopy();
+	}
+
+	public SignalBus getInputOutputMapping() {
+		return inputOutputMapping.deepCopy();
+	}
 }

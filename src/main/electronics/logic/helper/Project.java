@@ -4,6 +4,7 @@
 package electronics.logic.helper;
 
 import helper.Consts.ExceptionMessages;
+import helper.ProcGenException;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
@@ -16,10 +17,10 @@ import java.util.List;
 public class Project {
 	String name;
 	Simulator flowController = null;
-	EntityManager entityManager =  new EntityManager();
+	EntityManager entityManager =  new EntityManager(this);
 	ConnectionManager connectionManager = new ConnectionManager();
 	
-	Project(String projectName){
+	public Project(String projectName){
 		this.name = projectName;
 	}
 	
@@ -33,5 +34,16 @@ public class Project {
 			this.flowController = new Simulator(simulationTriggeringEntity, isTimeUsed);
 		}
 	}
+
+	public void publishEntityChangeEvent(EntityChangeEvent entityChangeEvent) throws ProcGenException {
+		connectionManager.updateConnectionManager(entityChangeEvent);		
+	}
 	
+	public ConnectionManager getConnectionManager(){
+		return this.connectionManager;
+	}
+	
+	public EntityManager getEntityManager(){
+		return this.entityManager;
+	}
 }

@@ -12,14 +12,23 @@ import org.testng.annotations.AfterClass;
 
 import electronics.logic.helper.Entity;
 import electronics.logic.helper.EntityManager;
+import electronics.logic.helper.Project;
 
 public class EntityTest {
 	
 	Entity testEntity;
+	EntityManager em;
 	
 	@BeforeMethod
 	public void beforeMethod() {
-		testEntity = new Entity("myTestEntity1","myTestEntity");
+		Project testProject = new Project("testProject");
+		testEntity = new Entity("myTestEntity");
+		try {
+			em = testProject.getEntityManager();
+			em.addBaseEntity(testEntity);
+		} catch (ProcGenException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@AfterMethod
@@ -49,7 +58,7 @@ public class EntityTest {
 		
 		int oldNumOfInputs = testEntity.getNumberOfInputs(); 
 		try {
-			testEntity.addInput(inputName, busWidth);
+			em.addInputSignal(testEntity.getId(), inputName, busWidth);
 		} catch (ProcGenException e) {
 			Assert.fail();
 			e.printStackTrace();
@@ -72,7 +81,7 @@ public class EntityTest {
 		
 		int oldNumOfInputs = testEntity.getNumberOfInputs();
 		try {
-			testEntity.addInput(inputName, busWidth);
+			em.addInputSignal(testEntity.getId(),inputName, busWidth);
 		} catch (ProcGenException e) {
 			Assert.fail();
 			e.printStackTrace();
@@ -93,7 +102,7 @@ public class EntityTest {
 	public void addOutput(int busWidth, String outputName) {
 		int oldNumOfOutputs = testEntity.getNumberOfOutputs(); 
 		try {
-			testEntity.addOutput(outputName, busWidth);
+			em.addOutputSignal(testEntity.getId(), outputName, busWidth);
 		} catch (ProcGenException e) {
 			Assert.fail();
 			e.printStackTrace();
@@ -116,7 +125,7 @@ public class EntityTest {
 		
 		int oldNumOfOutputs = testEntity.getNumberOfOutputs();
 		try {
-			testEntity.addOutput(outputName, busWidth);
+			em.addOutputSignal(testEntity.getId(), outputName, busWidth);
 		} catch (ProcGenException e) {
 			Assert.fail();
 			e.printStackTrace();
@@ -129,19 +138,27 @@ public class EntityTest {
 	
 	@Test
 	public void testChangeEntityId(){
-		Entity parentEntity = new Entity("","parent");
-		Entity childEntity1 = new Entity("a","childEntity1");
-		Entity childEntity2 = new Entity("b","childEntity2");
-		Entity grandChildEntity1 = new Entity("c","grandChildEntity1");
-		Entity grandChildEntity2 = new Entity("d","grandChildEntity2");
+		Entity parentEntity = new Entity("parent");
+		Entity childEntity1 = new Entity("childEntity1");
+		Entity childEntity2 = new Entity("childEntity2");
+		Entity grandChildEntity1 = new Entity("grandChildEntity1");
+		Entity grandChildEntity2 = new Entity("grandChildEntity2");
 		
-		parentEntity.addChildEntity(childEntity1);
-		parentEntity.addChildEntity(childEntity2);
-		childEntity1.addChildEntity(grandChildEntity1);
-		childEntity2.addChildEntity(grandChildEntity2);
+		Project testProject = new Project("testProject");
+		EntityManager em = testProject.getEntityManager();
+		try {
+			em.addBaseEntity(parentEntity);
+		} catch (ProcGenException e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+		
+		em.addChildEntity(parentEntity.getId(), childEntity1);
+		em.addChildEntity(parentEntity.getId(), childEntity2);
+		em.addChildEntity(childEntity1.getId(), grandChildEntity1);
+		em.addChildEntity(childEntity2.getId(), grandChildEntity2);
 			
-		EntityManager em = new EntityManager();
-		em.addBaseEntity(parentEntity);
+
 		Assert.assertEquals(childEntity1.getId(), "1-1");
 		Assert.assertEquals(childEntity2.getId(), "1-2");
 		Assert.assertEquals(grandChildEntity1.getId(), "1-1-1");
@@ -150,6 +167,44 @@ public class EntityTest {
 	}
 	
 	
+	@Test
+	public void testGetChildEntityById(){
+		Entity parentEntity = new Entity("parent");
+		Entity childEntity1 = new Entity("childEntity1");
+		Entity childEntity2 = new Entity("childEntity2");
+		Entity grandChildEntity1 = new Entity("grandChildEntity1");
+		Entity grandChildEntity2 = new Entity("grandChildEntity2");
+
+		Project testProject = new Project("testProject");
+		EntityManager em = testProject.getEntityManager();
+		try {
+			em.addBaseEntity(parentEntity);
+		} catch (ProcGenException e) {
+			Assert.fail();
+			e.printStackTrace();
+		}
+		
+		em.addChildEntity(parentEntity.getId(), childEntity1);
+		em.addChildEntity(parentEntity.getId(), childEntity2);
+		em.addChildEntity(childEntity1.getId(), grandChildEntity1);
+		em.addChildEntity(childEntity2.getId(), grandChildEntity2);
+		
+		Entity testChildEntity1 = em.getEntityById("1-1");
+		Entity testChildEntity2 = em.getEntityById("1-2");
+		Entity testGrandChildEntity1 = em.getEntityById("1-1-1");
+		Entity testGrandChildEntity2 = em.getEntityById("1-2-1");
+		
+		System.out.println("testChildEntity1: " + testChildEntity1.getId());
+		System.out.println("testChildEntity2: " + testChildEntity2.getId());
+		System.out.println("testGrandChildEntity1: " + testGrandChildEntity1.getId());
+		System.out.println("testGrandChildEntity2: " + testGrandChildEntity2.getId());
+		
+		Assert.assertEquals(testChildEntity1, childEntity1);
+		Assert.assertEquals(testChildEntity2, childEntity2);
+		Assert.assertEquals(testGrandChildEntity1, grandChildEntity1);
+		Assert.assertEquals(testGrandChildEntity2, grandChildEntity2);
+		
+	}	
 //	@Test
 //	public void makeInvisible() {
 //		throw new RuntimeException("Test not implemented");

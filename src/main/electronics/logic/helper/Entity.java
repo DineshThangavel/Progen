@@ -27,13 +27,21 @@ public class Entity {
 	private String id;
 	private String name;
 	private String parentId;
-	// TODO check if this can be changed to hashmap for better performance
+	
 	private List<SignalBus> inputList = new ArrayList<SignalBus>();
 	private List<SignalBus> outputList = new ArrayList<SignalBus>();
 	private List<Entity> entityList = new ArrayList<Entity>();
 	private ConnectionManager entityConnectionManager = new ConnectionManager();
-
-	public Entity(String id, String name) {
+	
+	// This type of entity can be created and no valid id is present
+	public Entity(String name){
+		this.id = null;
+		this.name = name;
+		this.parentId = null;
+	}
+	
+	// Entity which have id are only assigned by entity manager
+	protected Entity(String id, String name) {
 
 		this.id = id;
 		this.name = name;
@@ -44,10 +52,34 @@ public class Entity {
 	 * parentId decides if the entity is base entity For base entity parentId is
 	 * null and this is assumed by default
 	 */
-	public Entity(String id, String name, String parentId) {
+	protected Entity(String id, String name, String parentId) {
 		this.id = id;
 		this.name = name;
 		this.parentId = parentId;
+	}
+
+	// Deep Copy Constructor method for entity
+	public Entity deepCopy() {
+		Entity newCopyEntity = new Entity(this.id,this.name);
+		newCopyEntity.parentId = this.parentId;
+		newCopyEntity.name = this.name;
+		newCopyEntity.id = this.id;
+		
+		for(Entity subEntity:this.entityList){
+			Entity newSubEntityCopy = subEntity.deepCopy();
+			newCopyEntity.entityList.add(newSubEntityCopy);
+		}
+		
+		for(SignalBus input :this.inputList){
+			newCopyEntity.inputList.add(input.deepCopy());
+		}
+
+		for(SignalBus output :this.outputList){
+			newCopyEntity.outputList.add(output.deepCopy());
+		}
+		
+		newCopyEntity.entityConnectionManager = this.entityConnectionManager.deepCopy();
+		return newCopyEntity;
 	}
 
 	public int getNumberOfInputs() {
@@ -101,7 +133,7 @@ public class Entity {
 	 * 
 	 * @throws ProcGenException
 	 */
-	public boolean addInput(String inputName, int signalBusWidth)
+	protected boolean addInput(String inputName, int signalBusWidth)
 			throws ProcGenException {
 
 		if (!isSignalPresentInInputByName(inputName)) {
@@ -115,7 +147,7 @@ public class Entity {
 
 	}
 
-	public boolean addOutput(String outputName, int signalBusWidth)
+	protected boolean addOutput(String outputName, int signalBusWidth)
 			throws ProcGenException {
 		if (!isSignalPresentInOutputByName(outputName)) {
 			outputList.add(new SignalBus(outputName, signalBusWidth));
@@ -127,6 +159,7 @@ public class Entity {
 					Consts.ExceptionMessages.OUTPUT_ALREADY_PRESENT);
 
 	}
+
 
 	public SignalBus defaultBehaviour(List<SignalBus> inputList)
 			throws ProcGenException {
@@ -149,13 +182,18 @@ public class Entity {
 		return true;
 	}
 
-	public void addChildEntity(Entity childEntity) {
+	protected void addChildEntity(String childEntityId, Entity childEntity) {
 		if (childEntity == null)
 			return;
 
 		// set current entity as child's parent
 		childEntity.parentId = this.id;
+		childEntity.id = childEntityId;
 		this.entityList.add(childEntity);
+	}
+	
+	public List<Entity> getChildEntityList(){
+		return this.entityList;
 	}
 	
 	public List<SignalBus> getOutputPortList(){
@@ -185,5 +223,20 @@ public class Entity {
 		
 		return false;
 	}
-
+	
+	public Entity getChildEntityById(String childEntityId){
+		String[] entityId = childEntityId.split("-");
+		Entity entitySearcher = this;
+		
+		// Ids start with 1. So need to subtract 1 to make it an index of array.
+		for(int i=1;i<entityId.length;i++){
+			entitySearcher = entitySearcher.entityList.get(Integer.valueOf(entityId[i])-1);			
+		}
+		
+		return entitySearcher;
+	}
+	
+	public void publishEntityChangeEvent(EntityChangeEvent entityChangeEvent) throws ProcGenException{
+		this.entityConnectionManager.updateConnectionManager(entityChangeEvent);
+	} 
 }

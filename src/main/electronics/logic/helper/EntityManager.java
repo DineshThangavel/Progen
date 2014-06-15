@@ -3,25 +3,38 @@
  */
 package electronics.logic.helper;
 
+import helper.ProcGenException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import electronics.logic.helper.EntityChangeEvent.EntityChangeType;
 
 /**
  * @author DINESH THANGAVEL
  *
  */
 public final class EntityManager {
-	HashMap<String,Entity> baseEntityMap = new HashMap<String,Entity>();
+	ArrayList<Entity> baseEntityList = new ArrayList<Entity>();
+	Project parentProject;
 	
+	public EntityManager(Project project) {
+		parentProject = project;
+	}
+
 	public List<Entity> getBaseEntities(){
-		return (List<Entity>) baseEntityMap;	
+		return (List<Entity>) baseEntityList;	
 	}
 	
-	public void addBaseEntity(Entity entityToAdd){
+	public void addBaseEntity(Entity entityToAdd) throws ProcGenException{
 		String newId = generateBaseEntityId();
 		entityToAdd.changeEntityId(newId);
-		baseEntityMap.put(newId,entityToAdd);
+		baseEntityList.add(entityToAdd);
+		
+		// create EntityChange event
+		EntityChangeEvent entityChangeEvent = new EntityChangeEvent(EntityChangeType.AddEntityEvent,null,entityToAdd);
+		parentProject.publishEntityChangeEvent(entityChangeEvent);
 	}
 	
 	/*
@@ -31,15 +44,48 @@ public final class EntityManager {
 	 * eg "1-1'
 	 */
 	private String generateBaseEntityId(){
-		int id = baseEntityMap.size() + 1;
+		int id = baseEntityList.size() + 1;
 		return String.valueOf(id);	
 	}
 	
 	public void addChildEntity(String parentEntityId, Entity newChildEntity){
+		Entity parentEntity = getEntityById(parentEntityId);
+		String newChildId = parentEntityId +"-" + String.valueOf((parentEntity.getChildEntityList().size() + 1));
+		parentEntity.addChildEntity(newChildId, newChildEntity);
+	}
+	
+	public void addInputSignal(String entityId,String signalName, int signalBusWidth) throws ProcGenException{
+		Entity entityToEdit = getEntityById(entityId);
+		// Deep copy constructor for Entity
+		Entity entityBeforeEndit = entityToEdit.deepCopy();
+		entityToEdit.addInput(signalName, signalBusWidth);
 		
+		EntityChangeEvent entityModificationEvent  =  new EntityChangeEvent(EntityChangeType.ModifyEntityEvent,entityBeforeEndit,entityToEdit);
+		this.parentProject.publishEntityChangeEvent(entityModificationEvent);
+	}
+
+	public void addOutputSignal(String entityId,String signalName, int signalBusWidth) throws ProcGenException{
+		Entity entityToEdit = getEntityById(entityId);
+		
+		// Deep copy constructor for Entity
+		Entity entityBeforeEndit = entityToEdit.deepCopy();
+		entityToEdit.addOutput(signalName, signalBusWidth);
+
+		EntityChangeEvent entityModificationEvent  =  new EntityChangeEvent(EntityChangeType.ModifyEntityEvent,entityBeforeEndit,entityToEdit);
+		this.parentProject.publishEntityChangeEvent(entityModificationEvent);
 	}
 	
 	public Entity getEntityById(String entityId){
 		
+		String[] entityLocations = entityId.split("-");
+		String baseEntityId = entityLocations[0];
+		
+		// Ids start with 1. So need to subtract 1 to make it an index of array.
+		Entity baseEntity = baseEntityList.get(Integer.valueOf(baseEntityId)-1);
+		
+		assert(baseEntity != null);
+		Entity requiredEntity = baseEntity.getChildEntityById(entityId);
+		return requiredEntity;
 	}
+
 }

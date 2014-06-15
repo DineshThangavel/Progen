@@ -108,5 +108,14 @@ public class SignalBus {
 		}
 		return valueCopy;
 	}
+	
+	public SignalBus deepCopy(){
+		SignalBus newSignalBusCopy = new SignalBus(this.name,this.getBusWidth());
+		for(int i=0;i<this.getBusWidth();i++){
+			newSignalBusCopy.value[i] = this.value[i];
+		}
+		
+		return newSignalBusCopy;
+	}
 
 }
