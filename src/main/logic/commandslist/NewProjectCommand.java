@@ -17,7 +17,7 @@ public class NewProjectCommand implements Command {
 
 	@Override
 	public String execute(String args) throws ProcGenException {
-		ElectronicsLogicFacade eleLogic = LogicFacade.getElectronicLogicFacade();
+		ElectronicsLogicFacade eleLogic = ElectronicsLogicFacade.getInstance();
 		if(args.length() ==0)
 			throw new ProcGenException("Argument cannot be empty for new_project");
 		assert(args.length() > 0);

@@ -25,6 +25,7 @@ public class CommandFactory {
 
 		cmdMapper.put(CommandInputText.UNDO, new UndoCommand());
 		cmdMapper.put(CommandInputText.NEW_PROJECT, new NewProjectCommand());
+		cmdMapper.put(CommandInputText.NEW_ENTITY, new NewEntityCommand());
 	}
 
 	public Command makeCommand(String userInputText)

@@ -74,18 +74,36 @@ public class ConnectionManager {
 	}
 
 	private void updateEntityDeletion(Entity entityToDelete) {
-		connectionDirectory.remove(entityToDelete);
-
-		// TODO: check if any of the other entity signals are connected to
+		// check if any of the other entity signals are connected to
 		// signal in this entity
-
+		
+		// Iterate through all entities
+		Iterator entitiesIterator = this.connectionDirectory.keySet().iterator();
+		while(entitiesIterator.hasNext()){
+			String entityName = (String) entitiesIterator.next();
+			
+			HashMap<String, List<Connection>> signalConnectionMappingHashMap = this.connectionDirectory.get(entityName); 
+			Iterator signalIterator = this.connectionDirectory.get(entityName).keySet().iterator();
+			
+			while(signalIterator.hasNext()){
+				String signalName = (String) signalIterator.next();
+				List<Connection> connectionListForPorts = signalConnectionMappingHashMap.get(signalName);
+				for(Connection connection:connectionListForPorts)
+				{
+					if(connection.destinationEntityId == entityToDelete.getId()){
+						connectionListForPorts.remove(connection);
+					}
+				}
+			}
+		}
+		
+		connectionDirectory.remove(entityToDelete);
 	}
 
 	// only one modification will be contained in an entity after change
 	private void updateEntityModification(Entity entityBeforeChange,
 			Entity entityAfterChange) {
-		// TODO Auto-generated method stub
-
+		
 		HashMap<String, List<Connection>> signalConnectionMapping = this.connectionDirectory
 				.get(entityBeforeChange.getId());
 
@@ -127,12 +145,6 @@ public class ConnectionManager {
 		}
 		
 		// either a new addition or a rename
-//		if(signalConnectionMapping==null && entityAfterChange.getNumberOfOutputs() == 1){
-//			// new entity
-//			signalConnectionMapping.put(entityAfterChange.getOutputPortList().get(0).getName(), null);
-//			return;
-//		}
-		
 		for (SignalBus outputSignal : entityAfterChange.getOutputPortList()) {
 			if (!signalConnectionMapping.containsKey(outputSignal.getName())) {
 				// hence check for entityBeforeChange's size

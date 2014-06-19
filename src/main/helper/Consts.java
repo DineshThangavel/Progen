@@ -13,6 +13,16 @@ public class Consts {
 		public static final String PROMPT_ENTER_COMMAND = "Please Enter the Command:";
 		public static final String ERROR = "ERROR:";
 		public static final String SUCCESS = "SUCCESS:";
+		public static final String NEW_ENTITY_HEADER = "New Entity Details:";
+		public static final String PROMPT_NEW_ENTITY_NAME = " Please Enter the name of the entity";
+		public static final String PROMPT_NEW_ENTITY_PARENT_ID = "Please Enter the parent ID of the entity"; // has to be removed for GUI
+		public static final String PROMPT_NEW_ENTITY_NO_OF_INPUT_SIGNALS = "Please enter the number of inputs";
+		public static final String PROMPT_NEW_ENTITY_NO_OF_OUTPUT_SIGNALS = "Please enter the number of outputs";
+		public static final String PROMPT_NEW_ENTITY_INPUT_SIGNAL_NAME = "Please enter input port name";
+		public static final String PROMPT_NEW_ENTITY_OUTPUT_SIGNAL_NAME = "Please enter output port name";
+		public static final String PRINT_NOT_A_NUMBER = "It is not a number";
+		public static final String PROMPT_NEW_INPUT_SIGNAL_BUS_WIDTH = "Enter the bus width size for input signal";
+		public static final String PROMPT_NEW_OUTPUT_SIGNAL_BUS_WIDTH = "Enter the bus width size for output signal";
 	}
 	
 	public static class CommandInputText{
@@ -25,6 +35,8 @@ public class Consts {
 	public static class CommandResults{
 		public static final String UNDO_UNAVAILABLE = "UNDO Unavailable";
 		public static final String SUCCESS_NEW_PROJECT_CREATION = "Successfully created new project";
+		public static final String CREATE_PROJECT_BEFORE_ENTITY = "Please create project before creating entity";
+		public static final String SUCCESS_NEW_ENTITY_CREATION = "Successfully created new entity with Id ";
 	}
 	
 	public static class ExceptionMessages{

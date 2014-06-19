@@ -19,13 +19,13 @@ public class ConsoleUI {
 		System.out.println(ConsoleUIConstants.PROMPT_ENTER_COMMAND);
 	}
 
-	public String readConsoleInput() throws IOException {
+	static public String readConsoleInput() throws IOException {
 		BufferedReader bufferRead = new BufferedReader(new InputStreamReader(
 				System.in));
 		return bufferRead.readLine();
 	}
 	
-	public void printMessage(String message){
+	static public void printMessage(String message){
 		System.out.println(message);
 	}
 }

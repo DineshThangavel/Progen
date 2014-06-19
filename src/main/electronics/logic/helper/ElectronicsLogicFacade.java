@@ -8,13 +8,27 @@ package electronics.logic.helper;
  *
  */
 public class ElectronicsLogicFacade {
+	
+	private static ElectronicsLogicFacade instance =null;
 	Project baseProject = null;
+	
+	private ElectronicsLogicFacade(){
+		
+	}
+	
+	public static ElectronicsLogicFacade getInstance(){
+		if(instance == null) {
+	         instance = new ElectronicsLogicFacade();
+	      }
+	      return instance;
+		
+	}
 	
 	public void createNewProject(String name){
 		if(baseProject == null){
 			baseProject = new Project(name);
 		
-		//TODO Implement Exception 
+		//TODO If one project is active support opening another project in the future.
 		};
 	}
 	
@@ -22,7 +36,7 @@ public class ElectronicsLogicFacade {
 	 *  This returns a project instance for other commands 
 	 *  to act and modify
 	 */
-	public Project getPrjectInstance(){
+	public Project getActivePrjectInstance(){
 		return this.baseProject;
 	}	
 		

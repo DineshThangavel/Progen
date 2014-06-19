@@ -14,7 +14,6 @@ import helper.ProcGenException;
 public class LogicFacade {
 	CommandFactory cmdGenerator = new CommandFactory();
 	CommandManager cmdManager = new CommandManager();
-	static ElectronicsLogicFacade eleLogicFacade = new ElectronicsLogicFacade();
 	
 	public String processInput(String userInput) throws ProcGenException{
 		
@@ -30,7 +29,4 @@ public class LogicFacade {
 		return feedbackToUI;
 	}
 	
-	public static ElectronicsLogicFacade getElectronicLogicFacade(){
-		return eleLogicFacade;
-	}
 }

@@ -7,8 +7,10 @@ import helper.ProcGenException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
+import userinterface.EntityDetailsRetriever.EntityDetailsFromUser;
 import electronics.logic.helper.EntityChangeEvent.EntityChangeType;
 
 /**
@@ -86,6 +88,34 @@ public final class EntityManager {
 		assert(baseEntity != null);
 		Entity requiredEntity = baseEntity.getChildEntityById(entityId);
 		return requiredEntity;
+	}
+
+	public String addEntity(EntityDetailsFromUser newEntityDetails) throws ProcGenException {
+		
+		Entity newEntityToAdd = new Entity(newEntityDetails.nameOfEntity);
+		
+		Iterator<String> keyItrForInput = newEntityDetails.inputSignalNames.keySet().iterator();
+		
+		while(keyItrForInput.hasNext()){
+			String signalName = keyItrForInput.next();
+			newEntityToAdd.addInput(signalName,newEntityDetails.inputSignalNames.get(signalName));
+		}
+		
+		Iterator<String> keyItrForOutput = newEntityDetails.outputSignalNames.keySet().iterator();
+		
+		while(keyItrForOutput.hasNext()){
+			String signalName = keyItrForOutput.next();
+			newEntityToAdd.addOutput(signalName,newEntityDetails.outputSignalNames.get(signalName));
+		}
+		
+		if(newEntityDetails.parentOfEntity.length()> 0){
+			this.addChildEntity(newEntityDetails.parentOfEntity, newEntityToAdd);		
+		}
+		
+		else{
+			this.addBaseEntity(newEntityToAdd);
+		}
+		return newEntityToAdd.getId();		
 	}
 
 }

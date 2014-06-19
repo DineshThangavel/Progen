@@ -56,5 +56,8 @@ public class ConnectionTest {
 		Assert.assertEquals(connectionListForOutputPort1.size(), 1);
 		Assert.assertEquals(connectionListForOutputPort1.get(0).getSourceEntityId(), testEntity1.getId());
 		Assert.assertEquals(connectionListForOutputPort1.get(0).getDestinationEntityId(), testEntity2.getId());
+		Assert.assertEquals(connectionListForOutputPort1.get(0).getInputSignal().getName(),"outputPort1");
+		Assert.assertEquals(connectionListForOutputPort1.get(0).getOutputSignal().getName(),"inputPort1");
 	}
+	
 }
