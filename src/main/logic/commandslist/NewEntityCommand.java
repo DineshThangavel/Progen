@@ -31,7 +31,7 @@ public class NewEntityCommand implements UndoableCommand{
 			EntityDetailsRetriever.EntityDetailsFromUser newEntityDetails = EntityDetailsRetriever.retrieveEntityDetails();
 			EntityManager activeEntityManager = activeAppDetails.getActivePrjectInstance().getEntityManager();
 			String newEntityId = activeEntityManager.addEntity(newEntityDetails);
-			return newEntityId;
+			return Consts.CommandResults.SUCCESS_NEW_ENTITY_CREATION + newEntityId;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
