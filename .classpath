@@ -4,5 +4,7 @@
 	<classpathentry kind="src" path="src/test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.testng.TESTNG_CONTAINER"/>
+	<classpathentry kind="lib" path="D:/Semester7/FYP/SourceCode/antlr-runtime-3.2.jar"/>
+	<classpathentry kind="lib" path="D:/Semester7/FYP/SourceCode/vMagic.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
