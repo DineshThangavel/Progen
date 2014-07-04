@@ -3,14 +3,14 @@
  */
 package logic;
 
+import helper.CommandNotFoundException;
+import helper.Consts.CommandInputText;
+import helper.Consts.ExceptionMessages;
+
 import java.util.HashMap;
 
 import logic.commandslist.*;
-import helper.CommandNotFoundException;
-import helper.Consts;
-import helper.Consts.*;
-import helper.Consts.CommandInputText;
-import helper.Consts.ExceptionMessages;
+
 
 /**
  * @author DINESH THANGAVEL
@@ -26,6 +26,8 @@ public class CommandFactory {
 		cmdMapper.put(CommandInputText.UNDO, new UndoCommand());
 		cmdMapper.put(CommandInputText.NEW_PROJECT, new NewProjectCommand());
 		cmdMapper.put(CommandInputText.NEW_ENTITY, new NewEntityCommand());
+		cmdMapper.put(CommandInputText.DISPLAY_ENTITIES, new DisplayAllEntities());
+		cmdMapper.put(CommandInputText.IMPORT_VHDL, new ImportVhdlCode());
 	}
 
 	public Command makeCommand(String userInputText)

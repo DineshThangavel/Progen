@@ -23,13 +23,22 @@ public class Consts {
 		public static final String PRINT_NOT_A_NUMBER = "It is not a number";
 		public static final String PROMPT_NEW_INPUT_SIGNAL_BUS_WIDTH = "Enter the bus width size for input signal";
 		public static final String PROMPT_NEW_OUTPUT_SIGNAL_BUS_WIDTH = "Enter the bus width size for output signal";
+		public static final String SEPARATOR = "--------------------------------------------------------------------";
+		public static final String ENTITY_NAME = "Entity Name:";
+		public static final String ENTITY_ID = "Entity Id:";
+		public static final String PARENT_ID = "Parent Id:";
+		public static final String INPUT_PORTS = "Input Ports:";
+		public static final String OUTPUT_PORTS = "Output Ports:";
+		public static final String NO_ENTITY_IN_PROJECT = "No Entity present in the project";
+		public static final String SPECIFY_INPUT_FILE = "Please specify file name";
 	}
 	
 	public static class CommandInputText{
 		public static final String UNDO = "undo";
 		public static final String NEW_ENTITY = "new_entity";
 		public static final String NEW_PROJECT = "new_project";
-		
+		public static final String DISPLAY_ENTITIES = "display_entities";
+		public static final String IMPORT_VHDL = "import_vhdl";
 	}
 	
 	public static class CommandResults{
@@ -37,6 +46,7 @@ public class Consts {
 		public static final String SUCCESS_NEW_PROJECT_CREATION = "Successfully created new project";
 		public static final String CREATE_PROJECT_BEFORE_ENTITY = "Please create project before creating entity";
 		public static final String SUCCESS_NEW_ENTITY_CREATION = "Successfully created new entity with Id ";
+		public static final String COMMAND_EXECUTED_SUCCESSFULLY = "Command Executed Sucessfully";
 	}
 	
 	public static class ExceptionMessages{

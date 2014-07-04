@@ -3,8 +3,6 @@
  */
 package logic;
 
-import electronics.logic.helper.ElectronicsLogicFacade;
-import helper.CommandNotFoundException;
 import helper.ProcGenException;
 
 /**

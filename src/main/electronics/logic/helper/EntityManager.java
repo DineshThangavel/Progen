@@ -6,7 +6,6 @@ package electronics.logic.helper;
 import helper.ProcGenException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -107,7 +106,7 @@ public final class EntityManager {
 			String signalName = keyItrForOutput.next();
 			newEntityToAdd.addOutput(signalName,newEntityDetails.outputSignalNames.get(signalName));
 		}
-		
+		assert(newEntityDetails.parentOfEntity != null);
 		if(newEntityDetails.parentOfEntity.length()> 0){
 			this.addChildEntity(newEntityDetails.parentOfEntity, newEntityToAdd);		
 		}

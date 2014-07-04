@@ -5,13 +5,10 @@
 package electronics.logic.helper;
 
 import helper.Consts;
-import helper.InvalidSignalException;
 import helper.ProcGenException;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import electronics.logic.helper.*;
 
 /**
  * @author DINESH THANGAVEL
@@ -92,6 +89,14 @@ public class Entity {
 
 	public String getId() {
 		return this.id;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public String getParentId() {
+		return this.parentId;
 	}
 
 	/**

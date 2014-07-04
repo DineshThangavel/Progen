@@ -5,9 +5,8 @@ package logic.commandslist;
 
 import helper.Consts;
 import helper.ProcGenException;
-import electronics.logic.helper.ElectronicsLogicFacade;
 import logic.Command;
-import logic.LogicFacade;
+import electronics.logic.helper.ElectronicsLogicFacade;
 
 /**
  * @author DINESH THANGAVEL
