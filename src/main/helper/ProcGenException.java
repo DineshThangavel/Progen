@@ -24,7 +24,7 @@ public class ProcGenException extends Exception{
 	}
 
 	public ProcGenException(String errorcode,	String message) {
-		super(message);
+		super(message + "-"+ errorcode);
 		errorCode = errorcode;
 	}
 

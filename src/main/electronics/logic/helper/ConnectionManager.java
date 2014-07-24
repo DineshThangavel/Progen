@@ -24,7 +24,7 @@ public class ConnectionManager {
 	/*
 	 * The list of connections is stored as per entity and the signal port. This
 	 * will help in easily determining what are the entities that are connected
-	 * in the next level Key for outer hashmap is the entity id, inner hashmap
+	 * in the next level. Key for outer hashmap is the entity id, inner hashmap
 	 * key is signal name.
 	 */
 
@@ -187,7 +187,7 @@ public class ConnectionManager {
 
 	}
 
-	public void createConnection(Entity sourceEntity, Entity destinationEntity,
+	public void createConnectionBetweenBaseEntities(Entity sourceEntity, Entity destinationEntity,
 			SignalBus inputSignal, SignalBus outputSignal,
 			ConnectionType connectType) throws ProcGenException {
 

@@ -19,7 +19,7 @@ public class LogicFacade {
 		String commandAndArguments[] = userInput.split(userInputParts[0]);
 		String arguments = "";
 		if(commandAndArguments.length > 1){
-			arguments = commandAndArguments[1];
+			arguments = commandAndArguments[1].trim();
 		}
 		
 		Command cmdToExecute = cmdGenerator.makeCommand(userInputParts[0].toLowerCase());

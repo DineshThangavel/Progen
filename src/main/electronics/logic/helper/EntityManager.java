@@ -81,6 +81,8 @@ public final class EntityManager {
 		String[] entityLocations = entityId.split("-");
 		String baseEntityId = entityLocations[0];
 		
+		// TODO check for non existing entityId and return null
+		
 		// Ids start with 1. So need to subtract 1 to make it an index of array.
 		Entity baseEntity = baseEntityList.get(Integer.valueOf(baseEntityId)-1);
 		
@@ -107,7 +109,7 @@ public final class EntityManager {
 			newEntityToAdd.addOutput(signalName,newEntityDetails.outputSignalNames.get(signalName));
 		}
 		assert(newEntityDetails.parentOfEntity != null);
-		if(newEntityDetails.parentOfEntity.length()> 0){
+		if(newEntityDetails.parentOfEntity.length()> 0 && !(newEntityDetails.parentOfEntity.equals("0"))){
 			this.addChildEntity(newEntityDetails.parentOfEntity, newEntityToAdd);		
 		}
 		

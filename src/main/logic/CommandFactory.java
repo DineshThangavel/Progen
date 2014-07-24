@@ -28,6 +28,7 @@ public class CommandFactory {
 		cmdMapper.put(CommandInputText.NEW_ENTITY, new NewEntityCommand());
 		cmdMapper.put(CommandInputText.DISPLAY_ENTITIES, new DisplayAllEntities());
 		cmdMapper.put(CommandInputText.IMPORT_VHDL, new ImportVhdlCode());
+		cmdMapper.put(CommandInputText.CONNECT, new ConnectCommand());
 	}
 
 	public Command makeCommand(String userInputText)

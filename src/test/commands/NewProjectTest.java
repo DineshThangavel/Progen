@@ -1,5 +1,9 @@
 package commands;
 
+import helper.ProcGenException;
+import logic.LogicFacade;
+
+import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.AfterMethod;
@@ -9,40 +13,22 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.AfterTest;
 
+import electronics.logic.helper.ElectronicsLogicFacade;
+
 public class NewProjectTest {
-  @Test(dataProvider = "dp")
-  public void f(Integer n, String s) {
-  }
-  @BeforeMethod
-  public void beforeMethod() {
-  }
+  @Test
+  public void createNewProject() {
+	  LogicFacade logicInterface = new LogicFacade();
+	  try {
+		  Assert.assertEquals(ElectronicsLogicFacade.getInstance().getActivePrjectInstance(),null);
+		  
+		  String feedbackMsg = logicInterface.processInput("new_project testProject");
+		  Assert.assertNotNull(ElectronicsLogicFacade.getInstance().getActivePrjectInstance());
 
-  @AfterMethod
-  public void afterMethod() {
-  }
-
-
-  @DataProvider
-  public Object[][] dp() {
-    return new Object[][] {
-      new Object[] { 1, "a" },
-      new Object[] { 2, "b" },
-    };
-  }
-  @BeforeClass
-  public void beforeClass() {
-  }
-
-  @AfterClass
-  public void afterClass() {
-  }
-
-  @BeforeTest
-  public void beforeTest() {
-  }
-
-  @AfterTest
-  public void afterTest() {
+	} catch (ProcGenException e) {
+		Assert.fail();
+		e.printStackTrace();
+	}
   }
 
 }

@@ -8,6 +8,7 @@ import helper.Consts;
 import helper.ProcGenException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -29,6 +30,7 @@ public class Entity {
 	private List<SignalBus> outputList = new ArrayList<SignalBus>();
 	private List<Entity> entityList = new ArrayList<Entity>();
 	private ConnectionManager entityConnectionManager = new ConnectionManager();
+	private Simulator entitySim = new EntitySimulator(this);
 	
 	// This type of entity can be created and no valid id is present
 	public Entity(String name){
@@ -98,6 +100,10 @@ public class Entity {
 	public String getParentId() {
 		return this.parentId;
 	}
+	
+	public ConnectionManager getEntityConnectionManager(){
+		return this.entityConnectionManager;
+	}
 
 	/**
 	 * This method returns a reference to the actual input signal bus
@@ -107,7 +113,7 @@ public class Entity {
 		SignalBus signalToReturn = null;
 
 		for (SignalBus input : inputList) {
-			if (input.getName() == name && name != "") {
+			if (input.getName().equals(name) && name != "") {
 				signalToReturn = input;
 
 			}
@@ -124,7 +130,7 @@ public class Entity {
 		SignalBus signalToReturn = null;
 
 		for (SignalBus output : outputList) {
-			if (output.getName() == name && name != "") {
+			if (output.getName().equals(name) && name != "") {
 				signalToReturn = output;
 
 			}
@@ -143,6 +149,7 @@ public class Entity {
 
 		if (!isSignalPresentInInputByName(inputName)) {
 			inputList.add(new SignalBus(inputName, signalBusWidth));
+			// TODO: add Entity change event here
 			return true;
 		}
 
@@ -157,6 +164,7 @@ public class Entity {
 		if (!isSignalPresentInOutputByName(outputName)) {
 			outputList.add(new SignalBus(outputName, signalBusWidth));
 			return true;
+			// add EntityChangeEvent
 		}
 
 		else
@@ -211,7 +219,7 @@ public class Entity {
 	
 	public boolean isSignalPresentInInputByName(String name){
 		for(SignalBus inputSignal : inputList){
-			if(inputSignal.getName() == name){
+			if(inputSignal.getName().equals(name)){
 				return true;
 			}
 		}
@@ -221,7 +229,7 @@ public class Entity {
 	
 	public boolean isSignalPresentInOutputByName(String name){
 		for(SignalBus outputSignal : outputList){
-			if(outputSignal.getName() == name){
+			if(outputSignal.getName().equals(name)){
 				return true;
 			}
 		}

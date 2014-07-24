@@ -1,23 +1,15 @@
-/**
- *This class start the flow of the program 
- */
 package electronics.logic.helper;
 
+import helper.ProcGenException;
+
+import java.util.List;
 
 /**
  * @author DINESH THANGAVEL
  *
  */
-public class Simulator {
-	Entity triggeringEntity;
-	boolean isTimeTriggered;
+
+public interface Simulator {
 	
-	Simulator(Entity newTriggeringEntity,boolean isTimeTriggered){
-		this.triggeringEntity = newTriggeringEntity;
-		this.isTimeTriggered = isTimeTriggered;
-	}
-	
-	public void runSimulation(){
-				
-	}
+	public void runSimulation() throws ProcGenException;
 }

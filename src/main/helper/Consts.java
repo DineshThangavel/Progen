@@ -31,6 +31,7 @@ public class Consts {
 		public static final String OUTPUT_PORTS = "Output Ports:";
 		public static final String NO_ENTITY_IN_PROJECT = "No Entity present in the project";
 		public static final String SPECIFY_INPUT_FILE = "Please specify file name";
+		public static int NEW_ENTITY_ARGS_COUNT = 6;
 	}
 	
 	public static class CommandInputText{
@@ -39,6 +40,7 @@ public class Consts {
 		public static final String NEW_PROJECT = "new_project";
 		public static final String DISPLAY_ENTITIES = "display_entities";
 		public static final String IMPORT_VHDL = "import_vhdl";
+		public static final String CONNECT = "connect";
 	}
 	
 	public static class CommandResults{
@@ -47,6 +49,7 @@ public class Consts {
 		public static final String CREATE_PROJECT_BEFORE_ENTITY = "Please create project before creating entity";
 		public static final String SUCCESS_NEW_ENTITY_CREATION = "Successfully created new entity with Id ";
 		public static final String COMMAND_EXECUTED_SUCCESSFULLY = "Command Executed Sucessfully";
+		public static final String SUCCESS_NEW_CONNECTION_CREATION = "Successfully created new Connection between ";
 	}
 	
 	public static class ExceptionMessages{
@@ -58,6 +61,8 @@ public class Consts {
 		public static final String SIGNAL_NOT_RECOGNISED = "Unable to recognise type of signal";
 		public static final String CANNOT_CONNECT_EXCEPTION = "Unable to make a connection";
 		public static final String CONNECTION_CREATION_ERROR= "New Entity is already present";
+		public static final String ERROR_CREATING_ENTITY = "Unable to create entity";
+		public static final String ERROR_CREATING_CONNECTION = "Unable to create connection";
 	}
 	
 	public static class ErrorCodes{
@@ -65,6 +70,7 @@ public class Consts {
 		public static final String UNEQUAL_LENGTH_SIGNAL_ASSIGNMENT = "101";
 		public static final String SIGNAL_INDEX_NOT_FOUND = "102";
 		public static final String ENTITY_ALREADY_PRESENT = "103";
+		public static final String INVALID_COMMAND_ARGUMENT = "104";
 		
 	}
 }

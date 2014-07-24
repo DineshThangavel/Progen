@@ -14,7 +14,7 @@ import java.security.InvalidParameterException;
  */
 public class Project {
 	String name;
-	Simulator flowController = null;
+	ProjectSimulator flowController = null;
 	EntityManager entityManager =  new EntityManager(this);
 	ConnectionManager connectionManager = new ConnectionManager();
 	
@@ -29,7 +29,7 @@ public class Project {
 		}
 		
 		if(flowController == null){
-			this.flowController = new Simulator(simulationTriggeringEntity, isTimeUsed);
+			this.flowController = new ProjectSimulator(simulationTriggeringEntity, isTimeUsed);
 		}
 	}
 

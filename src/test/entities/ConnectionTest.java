@@ -46,7 +46,7 @@ public class ConnectionTest {
 		
 		ConnectionManager cm = testProject.getConnectionManager();
 		try {
-			cm.createConnection(testEntity1, testEntity2, testEntity1.getOutputByName("outputPort1"), testEntity2.getInputByName("inputPort1"), ConnectionType.DIRECT_CONNECTION);
+			cm.createConnectionBetweenBaseEntities(testEntity1, testEntity2, testEntity1.getOutputByName("outputPort1"), testEntity2.getInputByName("inputPort1"), ConnectionType.DIRECT_CONNECTION);
 		} catch (ProcGenException e) {
 			Assert.fail();
 			e.printStackTrace();

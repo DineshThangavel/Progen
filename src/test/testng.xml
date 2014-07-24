@@ -6,6 +6,8 @@
       <class name="entities.AndGateTest"/>
       <class name="entities.OrGateTest"/>
       <class name="entities.ConnectionTest"/>
+      <class name="commands.NewProjectTest"/>
+      <class name="commands.NewEntityTest"/>
     </classes>
   </test> <!-- Test -->
 </suite> <!-- Suite -->
