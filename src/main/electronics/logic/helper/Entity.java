@@ -29,14 +29,17 @@ public class Entity {
 	private List<SignalBus> inputList = new ArrayList<SignalBus>();
 	private List<SignalBus> outputList = new ArrayList<SignalBus>();
 	private List<Entity> entityList = new ArrayList<Entity>();
-	private ConnectionManager entityConnectionManager = new ConnectionManager();
+	
+	// any change to the child entities connection is done through events while changes in the signal of current entity is done in addInput and addOutput directly
+	private EntityConnectionManager entityConnectionManager = new EntityConnectionManager(this);
 	private Simulator entitySim = new EntitySimulator(this);
 	
 	// This type of entity can be created and no valid id is present
 	public Entity(String name){
-		this.id = null;
+		this.id = "";
 		this.name = name;
-		this.parentId = null;
+		this.parentId = "";
+		
 	}
 	
 	// Entity which have id are only assigned by entity manager
@@ -44,7 +47,7 @@ public class Entity {
 
 		this.id = id;
 		this.name = name;
-		this.parentId = null;
+		this.parentId = "";
 	}
 
 	/*
@@ -56,7 +59,7 @@ public class Entity {
 		this.name = name;
 		this.parentId = parentId;
 	}
-
+	
 	// Deep Copy Constructor method for entity
 	public Entity deepCopy() {
 		Entity newCopyEntity = new Entity(this.id,this.name);
@@ -77,7 +80,7 @@ public class Entity {
 			newCopyEntity.outputList.add(output.deepCopy());
 		}
 		
-		newCopyEntity.entityConnectionManager = this.entityConnectionManager.deepCopy();
+		newCopyEntity.entityConnectionManager = this.entityConnectionManager.deepCopy(newCopyEntity);
 		return newCopyEntity;
 	}
 
@@ -101,7 +104,7 @@ public class Entity {
 		return this.parentId;
 	}
 	
-	public ConnectionManager getEntityConnectionManager(){
+	public EntityConnectionManager getEntityConnectionManager(){
 		return this.entityConnectionManager;
 	}
 
@@ -149,7 +152,7 @@ public class Entity {
 
 		if (!isSignalPresentInInputByName(inputName)) {
 			inputList.add(new SignalBus(inputName, signalBusWidth));
-			// TODO: add Entity change event here
+			
 			return true;
 		}
 
@@ -164,7 +167,6 @@ public class Entity {
 		if (!isSignalPresentInOutputByName(outputName)) {
 			outputList.add(new SignalBus(outputName, signalBusWidth));
 			return true;
-			// add EntityChangeEvent
 		}
 
 		else
@@ -192,6 +194,7 @@ public class Entity {
 					+ String.valueOf(idCount));
 			idCount++;
 		}
+		
 		return true;
 	}
 
@@ -215,6 +218,23 @@ public class Entity {
 	
 	public List<SignalBus> getInputPortList(){
 		return this.inputList;
+	}
+	
+	public List<String> getAllPortsName(){
+		List<String> allPortsNameList = new ArrayList<String>();
+		
+		List<SignalBus> inputSignalList = this.getInputPortList();
+		List<SignalBus> outputSignalList = this.getOutputPortList();
+		
+		for(SignalBus input: inputSignalList){
+			allPortsNameList.add(input.getName());
+		}
+		
+		for(SignalBus output: outputSignalList){
+			allPortsNameList.add(output.getName());
+		}
+		
+		return allPortsNameList;
 	}
 	
 	public boolean isSignalPresentInInputByName(String name){
@@ -249,7 +269,12 @@ public class Entity {
 		return entitySearcher;
 	}
 	
-	public void publishEntityChangeEvent(EntityChangeEvent entityChangeEvent) throws ProcGenException{
-		this.entityConnectionManager.updateConnectionManager(entityChangeEvent);
+	public void notifyEntityChangeEvent(EntityChangeEvent entityChangeEvent) throws ProcGenException{
+		this.entityConnectionManager.updateAboutEvent(entityChangeEvent);
+		}
+
+	public void setParentId(String parentOfEntity) {
+		this.parentId = parentOfEntity;
+		
 	} 
 }

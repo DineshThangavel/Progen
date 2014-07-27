@@ -16,7 +16,7 @@ public class Project {
 	String name;
 	ProjectSimulator flowController = null;
 	EntityManager entityManager =  new EntityManager(this);
-	ConnectionManager connectionManager = new ConnectionManager();
+	ProjectConnectionManager connectionManager = new ProjectConnectionManager(this);
 	
 	public Project(String projectName){
 		this.name = projectName;
@@ -34,10 +34,11 @@ public class Project {
 	}
 
 	public void publishEntityChangeEvent(EntityChangeEvent entityChangeEvent) throws ProcGenException {
-		connectionManager.updateConnectionManager(entityChangeEvent);		
+		this.connectionManager.updateAboutEvent(entityChangeEvent);
+		this.entityManager.updateAboutEvent(entityChangeEvent);
 	}
 	
-	public ConnectionManager getConnectionManager(){
+	public ProjectConnectionManager getConnectionManager(){
 		return this.connectionManager;
 	}
 	

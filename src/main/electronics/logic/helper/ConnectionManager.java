@@ -29,13 +29,13 @@ public class ConnectionManager {
 	 */
 
 	// Stores the details of to which entity
-	private HashMap<String, HashMap<String, List<Connection>>> connectionDirectory = new HashMap<String, HashMap<String, List<Connection>>>();
+	protected HashMap<String, HashMap<String, List<Connection>>> connectionDirectory = new HashMap<String, HashMap<String, List<Connection>>>();
 
 	/*
 	 * The connection manager is updated in case there is any change Triggered
 	 * in entityManager/Entity itself
 	 */
-	protected void updateConnectionManager(EntityChangeEvent entityChangeDetails)
+	protected void updateAboutEvent(EntityChangeEvent entityChangeDetails)
 			throws ProcGenException {
 		if (entityChangeDetails.getChangeType() == EntityChangeType.AddEntityEvent) {
 			updateNewEntityAddition(entityChangeDetails.getEntityAfterChange());
@@ -53,8 +53,12 @@ public class ConnectionManager {
 
 	}
 
+	// the details of the child entity added is stored in the parent's connection manager
 	private void updateNewEntityAddition(Entity entityAfterChange)
 			throws ProcGenException {
+		
+		HashMap<String, HashMap<String, List<Connection>>> connectionDirectoryToModify = null;		
+			
 		if (connectionDirectory.get(entityAfterChange.getId()) != null) {
 			throw new ProcGenException(
 					Consts.ErrorCodes.ENTITY_ALREADY_PRESENT,
@@ -62,11 +66,11 @@ public class ConnectionManager {
 		}
 
 		HashMap<String, List<Connection>> signalConnectionMapping = new HashMap<String, List<Connection>>();
-		List<SignalBus> allPortsList = entityAfterChange.getOutputPortList();
+		List<String> allPortsNameList = entityAfterChange.getAllPortsName();
 
-		for (SignalBus port : allPortsList) {
+		for (String port : allPortsNameList) {
 			// Note currently no connnection is being added to the directory.
-			signalConnectionMapping.put(port.getName(), new ArrayList<Connection>());
+			signalConnectionMapping.put(port, new ArrayList<Connection>());
 		}
 
 		connectionDirectory.put(entityAfterChange.getId(),
@@ -194,16 +198,6 @@ public class ConnectionManager {
 		String sourceEntityId = sourceEntity.getId();
 		String destinationEntityId = destinationEntity.getId();
 
-		// check if signalbus provided are present in the entity
-		boolean areInputOutputSignalsPresent = sourceEntity
-				.isSignalPresentInOutputByName(inputSignal.getName())
-				&& destinationEntity.isSignalPresentInInputByName(outputSignal
-						.getName());
-
-		if (!areInputOutputSignalsPresent)
-			throw new ProcGenException(Consts.ErrorCodes.SIGNAL_NOT_RECOGNISED,
-					Consts.ExceptionMessages.CANNOT_CONNECT_EXCEPTION);
-
 		Connection newConnectionToAdd = new Connection(sourceEntityId,
 				destinationEntityId, inputSignal, outputSignal, connectType);
 
@@ -216,41 +210,11 @@ public class ConnectionManager {
 				.add(newConnectionToAdd);
 	}
 
-	public ConnectionManager deepCopy() {
-		ConnectionManager newConnectionManagerCopy = new ConnectionManager();
-		HashMap<String, HashMap<String, List<Connection>>> connectionDirectoryCopy = new HashMap<String, HashMap<String, List<Connection>>>();
 
-		Iterator iterator = this.connectionDirectory.keySet().iterator();
-
-		while (iterator.hasNext()) {
-			String key = (String) iterator.next();
-			HashMap<String, List<Connection>> signalConnectionMapping = this.connectionDirectory
-					.get(key);
-			HashMap<String, List<Connection>> signalConnectionMappingCopy = new HashMap<String, List<Connection>>();
-
-			Iterator signalConnIterator = signalConnectionMapping.keySet()
-					.iterator();
-			while (signalConnIterator.hasNext()) {
-				String signalName = (String) signalConnIterator.next();
-				List<Connection> connectionList = signalConnectionMapping
-						.get(signalName);
-				List<Connection> connectionListCopy = new ArrayList<Connection>();
-
-				for (Connection connection : connectionList) {
-					Connection newConnectionCopy = connection.deepCopy();
-					connectionListCopy.add(newConnectionCopy);
-				}
-				signalConnectionMappingCopy.put(signalName, connectionListCopy);
-			}
-			connectionDirectoryCopy.put(key, signalConnectionMappingCopy);
-		}
-
-		newConnectionManagerCopy.connectionDirectory = connectionDirectoryCopy;
-		return newConnectionManagerCopy;
-	}
-
-	public List<Connection> getConnectionsForEntity(String EntityId,
+	public List<Connection> getConnectionsForSignal(String EntityId,
 			String SignalName) {
+		// TODO: check for entityId and validate
+		
 		List<Connection> connectionList = connectionDirectory.get(EntityId)
 				.get(SignalName);
 		List<Connection> newConnectionList = new ArrayList<Connection>();
@@ -259,4 +223,32 @@ public class ConnectionManager {
 		}
 		return newConnectionList;
 	}
+	
+	// returns a deep copy of connections
+	public HashMap<String, List<Connection>> getConnectionForEntity(String EntityId){
+		
+		// TODO: validate entity Id and check if entity is present with that Id
+		
+		HashMap<String, List<Connection>> signalConnectionMapping = this.connectionDirectory
+				.get(EntityId);
+		HashMap<String, List<Connection>> signalConnectionMappingCopy = new HashMap<String, List<Connection>>();
+
+		Iterator signalConnIterator = signalConnectionMapping.keySet()
+				.iterator();
+		while (signalConnIterator.hasNext()) {
+			String signalName = (String) signalConnIterator.next();
+			List<Connection> connectionList = signalConnectionMapping
+					.get(signalName);
+			List<Connection> connectionListCopy = new ArrayList<Connection>();
+
+			for (Connection connection : connectionList) {
+				Connection newConnectionCopy = connection.deepCopy();
+				connectionListCopy.add(newConnectionCopy);
+			}
+			signalConnectionMappingCopy.put(signalName, connectionListCopy);
+		}
+
+		return signalConnectionMappingCopy;
+	}
+
 }

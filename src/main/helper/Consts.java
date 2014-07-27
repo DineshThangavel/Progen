@@ -41,6 +41,7 @@ public class Consts {
 		public static final String DISPLAY_ENTITIES = "display_entities";
 		public static final String IMPORT_VHDL = "import_vhdl";
 		public static final String CONNECT = "connect";
+		public static final String CLOSE_PROJECT = "close_project";
 	}
 	
 	public static class CommandResults{
@@ -50,6 +51,7 @@ public class Consts {
 		public static final String SUCCESS_NEW_ENTITY_CREATION = "Successfully created new entity with Id ";
 		public static final String COMMAND_EXECUTED_SUCCESSFULLY = "Command Executed Sucessfully";
 		public static final String SUCCESS_NEW_CONNECTION_CREATION = "Successfully created new Connection between ";
+		public static final String SUCCESS_CLOSED_PROJECT = "Successfully closed the project ";
 	}
 	
 	public static class ExceptionMessages{

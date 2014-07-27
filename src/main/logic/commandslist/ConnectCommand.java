@@ -75,6 +75,12 @@ public class ConnectCommand implements UndoableCommand {
 					destinationSignal, activeAppDetails, sourceEntity,
 					destinationEntity);
 		}
+		
+		else if (entityConnectionType == EntityConnectionType.CHILD_PARENT_CONNECTION) {
+			return establishChildParentConnection(sourceSignal,
+					destinationSignal, activeAppDetails, sourceEntity,
+					destinationEntity);
+		}
 		return null;
 	}
 
@@ -98,6 +104,26 @@ public class ConnectCommand implements UndoableCommand {
 						+ destinationEntity.getName() + "-" + destinationSignal;
 	}
 
+	private String establishChildParentConnection(String sourceSignal,
+			String destinationSignal, ElectronicsLogicFacade activeAppDetails,
+			Entity sourceEntity, Entity destinationEntity) throws ProcGenException {
+
+		// if it is connection between entities signal is from output
+		SignalBus inputSignal = sourceEntity.getOutputByName(sourceSignal);
+		SignalBus outputSignal = destinationEntity
+				.getOutputByName(destinationSignal);
+
+		assert (sourceEntity.getParentId() == destinationEntity.getId());
+
+		ConnectionManager cm = destinationEntity.getEntityConnectionManager();
+
+		cm.createConnectionBetweenBaseEntities(sourceEntity, destinationEntity,
+				inputSignal, outputSignal, ConnectionType.DIRECT_CONNECTION);
+		return Consts.CommandResults.SUCCESS_NEW_CONNECTION_CREATION
+				+ sourceEntity.getName() + "-" + sourceSignal + ":"
+				+ destinationEntity.getName() + "-" + destinationSignal;
+	}
+	
 	private String establishInterChildEntityConnection(String sourceSignal,
 			String destinationSignal, ElectronicsLogicFacade activeAppDetails,
 			Entity sourceEntity, Entity destinationEntity)
@@ -107,9 +133,6 @@ public class ConnectCommand implements UndoableCommand {
 		SignalBus inputSignal = sourceEntity.getOutputByName(sourceSignal);
 		SignalBus outputSignal = destinationEntity
 				.getInputByName(destinationSignal);
-
-		assert (sourceEntity.getEntityConnectionManager() == destinationEntity
-				.getEntityConnectionManager());
 
 		String parentId = sourceEntity.getParentId();
 		EntityManager em = activeAppDetails.getActivePrjectInstance()

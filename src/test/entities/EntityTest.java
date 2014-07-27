@@ -148,16 +148,15 @@ public class EntityTest {
 		EntityManager em = testProject.getEntityManager();
 		try {
 			em.addBaseEntity(parentEntity);
+			em.addChildEntity(parentEntity.getId(), childEntity1);
+			em.addChildEntity(parentEntity.getId(), childEntity2);
+			em.addChildEntity(childEntity1.getId(), grandChildEntity1);
+			em.addChildEntity(childEntity2.getId(), grandChildEntity2);
 		} catch (ProcGenException e) {
 			e.printStackTrace();
 			Assert.fail();
 		}
 		
-		em.addChildEntity(parentEntity.getId(), childEntity1);
-		em.addChildEntity(parentEntity.getId(), childEntity2);
-		em.addChildEntity(childEntity1.getId(), grandChildEntity1);
-		em.addChildEntity(childEntity2.getId(), grandChildEntity2);
-			
 
 		Assert.assertEquals(childEntity1.getId(), "1-1");
 		Assert.assertEquals(childEntity2.getId(), "1-2");
@@ -179,16 +178,17 @@ public class EntityTest {
 		EntityManager em = testProject.getEntityManager();
 		try {
 			em.addBaseEntity(parentEntity);
+			em.addChildEntity(parentEntity.getId(), childEntity1);
+			em.addChildEntity(parentEntity.getId(), childEntity2);
+			em.addChildEntity(childEntity1.getId(), grandChildEntity1);
+			em.addChildEntity(childEntity2.getId(), grandChildEntity2);
+			
 		} catch (ProcGenException e) {
 			Assert.fail();
 			e.printStackTrace();
 		}
 		
-		em.addChildEntity(parentEntity.getId(), childEntity1);
-		em.addChildEntity(parentEntity.getId(), childEntity2);
-		em.addChildEntity(childEntity1.getId(), grandChildEntity1);
-		em.addChildEntity(childEntity2.getId(), grandChildEntity2);
-		
+
 		Entity testChildEntity1 = em.getEntityById("1-1");
 		Entity testChildEntity2 = em.getEntityById("1-2");
 		Entity testGrandChildEntity1 = em.getEntityById("1-1-1");
@@ -205,13 +205,5 @@ public class EntityTest {
 		Assert.assertEquals(testGrandChildEntity2, grandChildEntity2);
 		
 	}	
-//	@Test
-//	public void makeInvisible() {
-//		throw new RuntimeException("Test not implemented");
-//	}
-//
-//	@Test
-//	public void startOperation() {
-//		throw new RuntimeException("Test not implemented");
-//	}
+
 }

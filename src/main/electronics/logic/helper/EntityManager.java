@@ -49,10 +49,14 @@ public final class EntityManager {
 		return String.valueOf(id);	
 	}
 	
-	public void addChildEntity(String parentEntityId, Entity newChildEntity){
+	public void addChildEntity(String parentEntityId, Entity newChildEntity) throws ProcGenException{
 		Entity parentEntity = getEntityById(parentEntityId);
 		String newChildId = parentEntityId +"-" + String.valueOf((parentEntity.getChildEntityList().size() + 1));
 		parentEntity.addChildEntity(newChildId, newChildEntity);
+		
+		// create EntityChange event
+		EntityChangeEvent entityChangeEvent = new EntityChangeEvent(EntityChangeType.AddEntityEvent,null,newChildEntity);
+		parentProject.publishEntityChangeEvent(entityChangeEvent);
 	}
 	
 	public void addInputSignal(String entityId,String signalName, int signalBusWidth) throws ProcGenException{
@@ -94,6 +98,7 @@ public final class EntityManager {
 	public String addEntity(EntityDetailsFromUser newEntityDetails) throws ProcGenException {
 		
 		Entity newEntityToAdd = new Entity(newEntityDetails.nameOfEntity);
+		newEntityToAdd.setParentId(newEntityDetails.parentOfEntity);
 		
 		Iterator<String> keyItrForInput = newEntityDetails.inputSignalNames.keySet().iterator();
 		
@@ -116,7 +121,20 @@ public final class EntityManager {
 		else{
 			this.addBaseEntity(newEntityToAdd);
 		}
+		
 		return newEntityToAdd.getId();		
+	}
+	
+	public void updateAboutEvent(EntityChangeEvent entityChangeEvent) throws ProcGenException{
+
+			Entity affectedEntity = entityChangeEvent.entityAfterChange;
+			String affectedEntityId = affectedEntity.getId();
+			
+			if(affectedEntityId.equals("")||affectedEntityId.equals("0")){
+				return;
+			}
+			
+			affectedEntity.notifyEntityChangeEvent(entityChangeEvent);
 	}
 
 }

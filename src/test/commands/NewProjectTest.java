@@ -22,9 +22,10 @@ public class NewProjectTest {
 	  try {
 		  Assert.assertEquals(ElectronicsLogicFacade.getInstance().getActivePrjectInstance(),null);
 		  
-		  String feedbackMsg = logicInterface.processInput("new_project testProject");
+		  System.out.println(logicInterface.processInput("new_project testProject"));
 		  Assert.assertNotNull(ElectronicsLogicFacade.getInstance().getActivePrjectInstance());
-
+		  System.out.println(logicInterface.processInput("close_project"));
+		  
 	} catch (ProcGenException e) {
 		Assert.fail();
 		e.printStackTrace();

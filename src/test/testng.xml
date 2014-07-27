@@ -8,6 +8,7 @@
       <class name="entities.ConnectionTest"/>
       <class name="commands.NewProjectTest"/>
       <class name="commands.NewEntityTest"/>
+      <class name="commands.NewConnectionTest"/>
     </classes>
   </test> <!-- Test -->
 </suite> <!-- Suite -->

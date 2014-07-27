@@ -52,7 +52,7 @@ public class ConnectionTest {
 			e.printStackTrace();
 		}
 		
-		List<Connection> connectionListForOutputPort1 = cm.getConnectionsForEntity(testEntity1.getId(), "outputPort1");
+		List<Connection> connectionListForOutputPort1 = cm.getConnectionsForSignal(testEntity1.getId(), "outputPort1");
 		Assert.assertEquals(connectionListForOutputPort1.size(), 1);
 		Assert.assertEquals(connectionListForOutputPort1.get(0).getSourceEntityId(), testEntity1.getId());
 		Assert.assertEquals(connectionListForOutputPort1.get(0).getDestinationEntityId(), testEntity2.getId());
