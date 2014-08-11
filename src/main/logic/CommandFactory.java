@@ -30,6 +30,7 @@ public class CommandFactory {
 		cmdMapper.put(CommandInputText.IMPORT_VHDL, new ImportVhdlCode());
 		cmdMapper.put(CommandInputText.CONNECT, new ConnectCommand());
 		cmdMapper.put(CommandInputText.CLOSE_PROJECT, new CloseProjectCommand());
+		cmdMapper.put(CommandInputText.NEW_AND_GATE, new NewAndGateCommand());
 	}
 
 	public Command makeCommand(String userInputText)

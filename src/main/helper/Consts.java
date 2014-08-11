@@ -42,6 +42,7 @@ public class Consts {
 		public static final String IMPORT_VHDL = "import_vhdl";
 		public static final String CONNECT = "connect";
 		public static final String CLOSE_PROJECT = "close_project";
+		public static final String NEW_AND_GATE = "new_and_gate";
 	}
 	
 	public static class CommandResults{
@@ -52,10 +53,10 @@ public class Consts {
 		public static final String COMMAND_EXECUTED_SUCCESSFULLY = "Command Executed Sucessfully";
 		public static final String SUCCESS_NEW_CONNECTION_CREATION = "Successfully created new Connection between ";
 		public static final String SUCCESS_CLOSED_PROJECT = "Successfully closed the project ";
+		public static final String SUCCESS_NEW_AND_CREATION = "Successfully created new AND gate with Id ";
 	}
 	
 	public static class ExceptionMessages{
-		public static final String STARTING_ENTITY_NOT_NULL = "Triggering Entity of simulation cannot be null";
 		public static final String COMMAND_NOT_FOUND = "The command could not be found";
 		public static final String UNEQUAL_LENGTH_SIGNAL_ASSIGNMENT = "The signal lengths do not match for assignment";
 		public static final String INPUT_ALREADY_PRESENT = "Input with same name already present";
@@ -65,6 +66,7 @@ public class Consts {
 		public static final String CONNECTION_CREATION_ERROR= "New Entity is already present";
 		public static final String ERROR_CREATING_ENTITY = "Unable to create entity";
 		public static final String ERROR_CREATING_CONNECTION = "Unable to create connection";
+		public static final String ERROR_CREATING_INPUT_SIM = "Unable to create input simulator";
 	}
 	
 	public static class ErrorCodes{

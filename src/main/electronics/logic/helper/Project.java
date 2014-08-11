@@ -14,7 +14,7 @@ import java.security.InvalidParameterException;
  */
 public class Project {
 	String name;
-	ProjectSimulator flowController = null;
+	ProjectSimulator projectSim = new ProjectSimulator(this);
 	EntityManager entityManager =  new EntityManager(this);
 	ProjectConnectionManager connectionManager = new ProjectConnectionManager(this);
 	
@@ -22,17 +22,6 @@ public class Project {
 		this.name = projectName;
 	}
 	
-	public void createSimulator(Entity simulationTriggeringEntity, boolean isTimeUsed){
-		
-		if(simulationTriggeringEntity == null){
-			throw new InvalidParameterException(ExceptionMessages.STARTING_ENTITY_NOT_NULL);
-		}
-		
-		if(flowController == null){
-			this.flowController = new ProjectSimulator(simulationTriggeringEntity, isTimeUsed);
-		}
-	}
-
 	public void publishEntityChangeEvent(EntityChangeEvent entityChangeEvent) throws ProcGenException {
 		this.connectionManager.updateAboutEvent(entityChangeEvent);
 		this.entityManager.updateAboutEvent(entityChangeEvent);
@@ -44,5 +33,9 @@ public class Project {
 	
 	public EntityManager getEntityManager(){
 		return this.entityManager;
+	}
+	
+	public ProjectSimulator getProjectSimulator(){
+		return projectSim;	
 	}
 }

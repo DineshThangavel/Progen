@@ -3,6 +3,7 @@
  */
 package electronics.logic.helper;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -10,15 +11,22 @@ import java.util.List;
  *
  */
 public class ProjectSimulator implements Simulator{
-	Entity triggeringEntity;
-	boolean isTimeTriggered;
 	
-	ProjectSimulator(Entity newTriggeringEntity,boolean isTimeTriggered){
-		this.triggeringEntity = newTriggeringEntity;
-		this.isTimeTriggered = isTimeTriggered;
+	Project hostProject = null;
+	HashMap<String,List<SignalBus>> inputSimulatorDirectory = new HashMap<String,List<SignalBus>>();
+	
+	ProjectSimulator(Project hostProject){
+		this.hostProject = hostProject;
 	}
 	
 	public void runSimulation(){
 		// 		
+	}
+
+	/*
+	 * @input
+	 */
+	public void addInputSimulator(InputSimulator newInputSimulator, String entityId, String signalName) {
+		
 	}
 }

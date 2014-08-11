@@ -113,16 +113,25 @@ public final class EntityManager {
 			String signalName = keyItrForOutput.next();
 			newEntityToAdd.addOutput(signalName,newEntityDetails.outputSignalNames.get(signalName));
 		}
-		assert(newEntityDetails.parentOfEntity != null);
-		if(newEntityDetails.parentOfEntity.length()> 0 && !(newEntityDetails.parentOfEntity.equals("0"))){
-			this.addChildEntity(newEntityDetails.parentOfEntity, newEntityToAdd);		
+
+		addEntity(newEntityToAdd);
+		
+		return newEntityToAdd.getId();		
+	}
+	
+	public String addEntity(Entity newEntityToAdd) throws ProcGenException{
+		
+		assert(newEntityToAdd.getParentId() != null);
+		
+		if(newEntityToAdd.getParentId().length()> 0 && !(newEntityToAdd.getParentId().equals("0"))){
+			this.addChildEntity(newEntityToAdd.getParentId(), newEntityToAdd);		
 		}
 		
 		else{
 			this.addBaseEntity(newEntityToAdd);
 		}
 		
-		return newEntityToAdd.getId();		
+		return newEntityToAdd.getId();
 	}
 	
 	public void updateAboutEvent(EntityChangeEvent entityChangeEvent) throws ProcGenException{
