@@ -27,15 +27,17 @@ public class ProjectConnectionManager extends ConnectionManager{
 
 	public void updateAboutEvent(EntityChangeEvent entityChangeEvent) throws ProcGenException{
 		Entity affectedEntity = entityChangeEvent.entityAfterChange;
-		if(affectedEntity.getParentId().equals("") || affectedEntity.getParentId().equals("0")){
+		if(affectedEntity.getParent() == null){
 			super.updateAboutEvent(entityChangeEvent);
 		}
 		
 		else{
-		String parentId = affectedEntity.getParentId();
+		String parentId = affectedEntity.getParent().getId();
 		Entity parentEntity = hostProject.getEntityManager().getEntityById(parentId);
 		EntityConnectionManager cm = parentEntity.getEntityConnectionManager();
 		cm.updateAboutEvent(entityChangeEvent);
 		}
+		
+		affectedEntity.notifyEntityChangeEvent(entityChangeEvent);
 	}
 }

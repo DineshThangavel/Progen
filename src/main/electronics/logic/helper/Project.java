@@ -24,7 +24,6 @@ public class Project {
 	
 	public void publishEntityChangeEvent(EntityChangeEvent entityChangeEvent) throws ProcGenException {
 		this.connectionManager.updateAboutEvent(entityChangeEvent);
-		this.entityManager.updateAboutEvent(entityChangeEvent);
 	}
 	
 	public ProjectConnectionManager getConnectionManager(){

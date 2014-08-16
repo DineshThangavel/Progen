@@ -49,7 +49,7 @@ public class DisplayAllEntities  implements  Command{
 	private void displayCompleteEntityDetail(Entity entity){
 		ConsoleUI.printMessage(Consts.ConsoleUIConstants.ENTITY_NAME + entity.getName());
 		ConsoleUI.printMessage(Consts.ConsoleUIConstants.ENTITY_ID + entity.getId());
-		ConsoleUI.printMessage(Consts.ConsoleUIConstants.PARENT_ID + entity.getParentId());
+		ConsoleUI.printMessage(Consts.ConsoleUIConstants.PARENT_ID + entity.getParent().getId());
 		ConsoleUI.printMessage(Consts.ConsoleUIConstants.INPUT_PORTS);
 		for(SignalBus s: entity.getInputPortList()){
 			ConsoleUI.printMessage(s.getName()+ " " + s.getBusWidth());

@@ -24,7 +24,7 @@ public class Entity {
 
 	private String id;
 	private String name;
-	private String parentId;
+	private Entity parentEntity;
 	
 	private List<SignalBus> inputList = new ArrayList<SignalBus>();
 	private List<SignalBus> outputList = new ArrayList<SignalBus>();
@@ -38,7 +38,7 @@ public class Entity {
 	public Entity(String name){
 		this.id = "";
 		this.name = name;
-		this.parentId = "";
+		this.parentEntity = null;
 		
 	}
 	
@@ -47,23 +47,13 @@ public class Entity {
 
 		this.id = id;
 		this.name = name;
-		this.parentId = "";
+		this.parentEntity = null;
 	}
 
-	/*
-	 * parentId decides if the entity is base entity For base entity parentId is
-	 * null and this is assumed by default
-	 */
-	protected Entity(String id, String name, String parentId) {
-		this.id = id;
-		this.name = name;
-		this.parentId = parentId;
-	}
-	
 	// Deep Copy Constructor method for entity
 	public Entity deepCopy() {
 		Entity newCopyEntity = new Entity(this.id,this.name);
-		newCopyEntity.parentId = this.parentId;
+		newCopyEntity.parentEntity = this.parentEntity;
 		newCopyEntity.name = this.name;
 		newCopyEntity.id = this.id;
 		
@@ -100,8 +90,8 @@ public class Entity {
 		return this.name;
 	}
 	
-	public String getParentId() {
-		return this.parentId;
+	public Entity getParent() {
+		return this.parentEntity;
 	}
 	
 	public EntityConnectionManager getEntityConnectionManager(){
@@ -212,7 +202,7 @@ public class Entity {
 			return;
 
 		// set current entity as child's parent
-		childEntity.parentId = this.id;
+		childEntity.parentEntity = this;
 		childEntity.id = childEntityId;
 		this.entityList.add(childEntity);
 	}
@@ -282,8 +272,8 @@ public class Entity {
 		this.entityConnectionManager.updateAboutEvent(entityChangeEvent);
 		}
 
-	public void setParentId(String parentOfEntity) {
-		this.parentId = parentOfEntity;
+	public void setParent(Entity parentEntity) {
+		this.parentEntity = parentEntity;
 		
 	} 
 	

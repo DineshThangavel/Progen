@@ -62,7 +62,7 @@ public class NewEntityCommand implements UndoableCommand{
 		newEntityDetails.nameOfEntity = splitArguments[0];
 		newEntityDetails.noOfInputSignals = Integer.parseInt(splitArguments[1]);
 		newEntityDetails.noOfOutputSignals = Integer.parseInt(splitArguments[2]);
-		newEntityDetails.parentOfEntity = splitArguments[3];
+		newEntityDetails.parentOfEntityId = splitArguments[3];
 		
 		if(splitArguments.length !=( 4 + (newEntityDetails.noOfInputSignals + newEntityDetails.noOfOutputSignals)*2))
 			throw new ProcGenException(Consts.ErrorCodes.INVALID_COMMAND_ARGUMENT,Consts.ExceptionMessages.ERROR_CREATING_ENTITY);

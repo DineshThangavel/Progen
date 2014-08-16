@@ -24,7 +24,7 @@ public class EntityDetailsRetriever {
 	public static class EntityDetailsFromUser {
 		// TODO: validate these parameters
 		public String nameOfEntity;
-		public String parentOfEntity;
+		public String parentOfEntityId;
 		public int noOfInputSignals;
 		public int noOfOutputSignals;
 		public HashMap<String, Integer> inputSignalNames = new HashMap<String, Integer>();
@@ -165,7 +165,7 @@ public class EntityDetailsRetriever {
 		ConsoleUI
 				.printMessage(Consts.ConsoleUIConstants.PROMPT_NEW_ENTITY_PARENT_ID);
 
-		newEntityDetails.parentOfEntity = ConsoleUI.readConsoleInput();
+		newEntityDetails.parentOfEntityId = ConsoleUI.readConsoleInput();
 	}
 
 	private static void getEntityNameFromUser(

@@ -86,19 +86,28 @@ public final class EntityManager {
 		String baseEntityId = entityLocations[0];
 		
 		// TODO check for non existing entityId and return null
-		
-		// Ids start with 1. So need to subtract 1 to make it an index of array.
-		Entity baseEntity = baseEntityList.get(Integer.valueOf(baseEntityId)-1);
-		
-		assert(baseEntity != null);
-		Entity requiredEntity = baseEntity.getChildEntityById(entityId);
-		return requiredEntity;
+		try{
+			int baseEntityIdAsInt = Integer.valueOf(baseEntityId);
+			if(baseEntityIdAsInt <= 0 || baseEntityIdAsInt > baseEntityList.size())
+				return null;
+			
+			// Ids start with 1. So need to subtract 1 to make it an index of array.
+			Entity baseEntity = baseEntityList.get(Integer.valueOf(baseEntityId)-1);
+			
+			assert(baseEntity != null);
+			Entity requiredEntity = baseEntity.getChildEntityById(entityId);
+			return requiredEntity;
+			
+		}catch(NumberFormatException e){
+			return null;
+		}
 	}
 
 	public String addEntity(EntityDetailsFromUser newEntityDetails) throws ProcGenException {
 		
 		Entity newEntityToAdd = new Entity(newEntityDetails.nameOfEntity);
-		newEntityToAdd.setParentId(newEntityDetails.parentOfEntity);
+		Entity parentEntity = this.getEntityById(newEntityDetails.parentOfEntityId);
+		newEntityToAdd.setParent(parentEntity);
 		
 		Iterator<String> keyItrForInput = newEntityDetails.inputSignalNames.keySet().iterator();
 		
@@ -121,29 +130,29 @@ public final class EntityManager {
 	
 	public String addEntity(Entity newEntityToAdd) throws ProcGenException{
 		
-		assert(newEntityToAdd.getParentId() != null);
-		
-		if(newEntityToAdd.getParentId().length()> 0 && !(newEntityToAdd.getParentId().equals("0"))){
-			this.addChildEntity(newEntityToAdd.getParentId(), newEntityToAdd);		
+		if(newEntityToAdd.getParent()!=null){
+			this.addChildEntity(newEntityToAdd.getParent().getId(), newEntityToAdd);		
 		}
 		
 		else{
 			this.addBaseEntity(newEntityToAdd);
 		}
 		
+		publishEventForAllChildEntitiesInNewEntity(newEntityToAdd);
+		
 		return newEntityToAdd.getId();
 	}
-	
-	public void updateAboutEvent(EntityChangeEvent entityChangeEvent) throws ProcGenException{
 
-			Entity affectedEntity = entityChangeEvent.entityAfterChange;
-			String affectedEntityId = affectedEntity.getId();
-			
-			if(affectedEntityId.equals("")||affectedEntityId.equals("0")){
-				return;
-			}
-			
-			affectedEntity.notifyEntityChangeEvent(entityChangeEvent);
+	private void publishEventForAllChildEntitiesInNewEntity(
+			Entity newEntityToAdd) throws ProcGenException {
+		
+		// create Event for all child entities in newEntityToAdd also
+		for(Entity childEntity:newEntityToAdd.getChildEntityList()){
+			// create EntityChange event
+			EntityChangeEvent entityChangeEvent = new EntityChangeEvent(EntityChangeType.AddEntityEvent,null,childEntity);
+			parentProject.publishEntityChangeEvent(entityChangeEvent);
+			publishEventForAllChildEntitiesInNewEntity(childEntity);
+		}
 	}
 
 }

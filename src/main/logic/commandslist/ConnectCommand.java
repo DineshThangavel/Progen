@@ -93,7 +93,7 @@ public class ConnectCommand implements UndoableCommand {
 				SignalBus outputSignal = destinationEntity
 						.getInputByName(destinationSignal);
 
-				assert (sourceEntity.getId() == destinationEntity.getParentId());
+				assert (sourceEntity.getId().equals(destinationEntity.getParent().getId()));
 
 				ConnectionManager cm = sourceEntity.getEntityConnectionManager();
 
@@ -113,7 +113,7 @@ public class ConnectCommand implements UndoableCommand {
 		SignalBus outputSignal = destinationEntity
 				.getOutputByName(destinationSignal);
 
-		assert (sourceEntity.getParentId() == destinationEntity.getId());
+		assert (sourceEntity.getParent().getId().equals(destinationEntity.getId()));
 
 		ConnectionManager cm = destinationEntity.getEntityConnectionManager();
 
@@ -134,7 +134,7 @@ public class ConnectCommand implements UndoableCommand {
 		SignalBus outputSignal = destinationEntity
 				.getInputByName(destinationSignal);
 
-		String parentId = sourceEntity.getParentId();
+		String parentId = sourceEntity.getParent().getId();
 		EntityManager em = activeAppDetails.getActivePrjectInstance()
 				.getEntityManager();
 		Entity parentEntity = em.getEntityById(parentId);
@@ -182,21 +182,21 @@ public class ConnectCommand implements UndoableCommand {
 
 		// connection between parent's input and child's input
 		if (sourceEntityIdSplit.length + 1 == destinationEntityIdSplit.length) {
-			if (destinationEntity.getParentId() == sourceEntity.getId()) {
+			if (destinationEntity.getParent().getId().equals(sourceEntity.getId())) {
 				return EntityConnectionType.PARENT_CHILD_CONNECTION;
 			}
 		}
 
 		// connection between child's output and parent's output
 		if (sourceEntityIdSplit.length == destinationEntityIdSplit.length + 1) {
-			if (sourceEntity.getParentId() == destinationEntity.getId()) {
+			if (sourceEntity.getParent().getId().equals(destinationEntity.getId())) {
 				return EntityConnectionType.CHILD_PARENT_CONNECTION;
 			}
 		}
 
 		// connection between child entities
 		if (sourceEntityIdSplit.length == destinationEntityIdSplit.length) {
-			if (destinationEntity.getParentId() == sourceEntity.getParentId()) {
+			if (destinationEntity.getParent() == sourceEntity.getParent()) {
 				return EntityConnectionType.INTER_CHILD_CONNECTION;
 			}
 		}
