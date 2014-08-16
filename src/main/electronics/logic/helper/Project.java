@@ -38,4 +38,8 @@ public class Project {
 	public ProjectSimulator getProjectSimulator(){
 		return projectSim;	
 	}
+	
+	public String getName(){
+		return this.name;
+	}
 }
