@@ -144,10 +144,11 @@ public class Entity {
 
 	/**
 	 * Adds an input to the input list of the entity
-	 * 
+	 * This should be used only during creation of new entity outside a Progen Project.
+	 * Inside a ProgenProject use EntityManager's addInput.
 	 * @throws ProcGenException
 	 */
-	protected boolean addInput(String inputName, int signalBusWidth)
+	public boolean addInput(String inputName, int signalBusWidth)
 			throws ProcGenException {
 
 		if (!isSignalPresentInInputByName(inputName)) {
@@ -162,7 +163,11 @@ public class Entity {
 
 	}
 
-	protected boolean addOutput(String outputName, int signalBusWidth)
+	/*
+	 * This should be used only during creation of new entity outside a Progen Project.
+	 * Inside a ProgenProject use EntityManager's addOutput.
+	 */
+	public boolean addOutput(String outputName, int signalBusWidth)
 			throws ProcGenException {
 		if (!isSignalPresentInOutputByName(outputName)) {
 			outputList.add(new SignalBus(outputName, signalBusWidth));
@@ -198,7 +203,11 @@ public class Entity {
 		return true;
 	}
 
-	protected void addChildEntity(String childEntityId, Entity childEntity) {
+	/*
+	 * This should be used only during creation of new child entity outside a Progen Project.
+	 * Inside a ProgenProject use EntityManager's addEntity.
+	 */
+	public void addChildEntity(String childEntityId, Entity childEntity) {
 		if (childEntity == null)
 			return;
 
@@ -277,4 +286,5 @@ public class Entity {
 		this.parentId = parentOfEntity;
 		
 	} 
+	
 }

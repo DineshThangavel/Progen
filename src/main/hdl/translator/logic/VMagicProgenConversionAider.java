@@ -25,12 +25,9 @@ import electronics.logic.helper.EntityManager;
  */
 public class VMagicProgenConversionAider {
 	
-	public static  EntityDetailsFromUser convertToProgenEntity(Entity vMagicEntity) throws ProcGenException {
-		EntityDetailsFromUser newEntityDetails = new EntityDetailsFromUser();
-		newEntityDetails.nameOfEntity = vMagicEntity.getIdentifier();
-		// TODO: Hardcoded value;
-		newEntityDetails.parentOfEntity = ""; 
-		
+	public static  electronics.logic.helper.Entity convertToProgenEntity(Entity vMagicEntity) throws ProcGenException {
+		electronics.logic.helper.Entity newEntity = new electronics.logic.helper.Entity(vMagicEntity.getIdentifier());
+			
 		for (VhdlObjectProvider<Signal> portsList : vMagicEntity.getPort()) {
 			Iterator<Signal> iterator = portsList.getVhdlObjects().iterator();
 			while (iterator.hasNext()) {
@@ -49,17 +46,17 @@ public class VMagicProgenConversionAider {
 				}
 				
 				if(port.getMode() == Mode.IN){
-					newEntityDetails.inputSignalNames.put(port.getIdentifier(), signalBusWidth);
+					newEntity.addInput(port.getIdentifier(), signalBusWidth);
 				}
 				
 				else if(port.getMode() == Mode.OUT){
-					newEntityDetails.outputSignalNames.put(port.getIdentifier(), signalBusWidth);
+					newEntity.addOutput(port.getIdentifier(), signalBusWidth);
 				}
 				
 				// TODO: Take care of other Modes as well
 			}
 		}
 		
-		return newEntityDetails;
+		return newEntity;
 	}
 }

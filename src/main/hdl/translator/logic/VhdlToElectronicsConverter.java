@@ -46,33 +46,31 @@ public class VhdlToElectronicsConverter {
 	/*
 	 * Convert to Progen entity and add it to project specified in parameter2
 	 */
-	private void convertToProgen(VhdlFile vhdlFileInput, Project progenProject) throws ProcGenException{
+	private electronics.logic.helper.Entity convertToProgen(VhdlFile vhdlFileInput, Project progenProject) throws ProcGenException{
 		List<Entity> entityList = VhdlCollections.getAll(vhdlFileInput.getElements(), Entity.class);
 		assert(entityList.size() == 1);
 		
 		// add the entity
-		userinterface.EntityDetailsRetriever.EntityDetailsFromUser newEntityDeatils = VMagicProgenConversionAider.convertToProgenEntity(entityList.get(0));
-		EntityManager em =progenProject.getEntityManager();
-		assert(em!= null);
-		em.addEntity(newEntityDeatils);
+		electronics.logic.helper.Entity newProgenEntity = VMagicProgenConversionAider.convertToProgenEntity(entityList.get(0));
 		
 		// Connections
 		List<Architecture> architectureList = VhdlCollections.getAll(vhdlFileInput.getElements(), Architecture.class);
 		//assuming only one architecture
 		assert(architectureList.size() == 1);
 		Architecture newEntityArchitecture = architectureList.get(0);
-		processVMagicArchitecture(newEntityArchitecture);
+		processVMagicArchitecture(newEntityArchitecture,newProgenEntity);
 		
+		return newProgenEntity;
 	}
 
-	private void processVMagicArchitecture(Architecture newEntityArchitecture) throws ProcGenException {
+	private void processVMagicArchitecture(Architecture newEntityArchitecture, electronics.logic.helper.Entity newProgenEntity) throws ProcGenException {
 		
 		// identify the registers
 		List<BlockDeclarativeItem> declarationList = newEntityArchitecture.getDeclarations();
 		processDeclarationStatements(declarationList);
 
-		// resolve dependencies on components
-		resolveComponentDepencies();
+		// resolve dependencies on components and update childEntity details
+		resolveComponentDepencies(newProgenEntity);
 		
 		// identify concurrent statements
 		List<ConcurrentStatement> concurrentStatements = newEntityArchitecture.getStatements();
@@ -80,12 +78,14 @@ public class VhdlToElectronicsConverter {
 		processConcurrentStatements(concurrentStatements,declarationList);
 	}
 	
-	private void resolveComponentDepencies() throws ProcGenException {
+	private void resolveComponentDepencies(electronics.logic.helper.Entity newProgenEntity) throws ProcGenException {
 		for(Component componentToResolve:componentsToBeResolved){
 			String nameOfComponent = componentToResolve.getIdentifier();
 			String fileName = getFileNameFromWorkspace(nameOfComponent);
 			VhdlToElectronicsConverter newInstance = new  VhdlToElectronicsConverter();
-			newInstance.convertToProgen(fileName);
+			electronics.logic.helper.Entity newChildEntity = newInstance.convertToProgen(fileName);
+			
+			newProgenEntity.addChildEntity("", newChildEntity);
 		}		
 		// TODO: clear the components to be resolved
 	}
@@ -127,17 +127,18 @@ public class VhdlToElectronicsConverter {
 		}
 	}
 
-	public void convertToProgen(String fileName) throws ProcGenException{
+	public electronics.logic.helper.Entity convertToProgen(String fileName) throws ProcGenException{
 		VhdlFile vhdFile;
 		try {
 			setWorkSpaceDetails(fileName);
 			vhdFile = this.readVhdlFile(fileName);
 			Project activeProject = ElectronicsLogicFacade.getInstance().getActivePrjectInstance();
-			this.convertToProgen(vhdFile,activeProject);
+			return this.convertToProgen(vhdFile,activeProject);
 		} catch (IOException | VhdlParserException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return null;
 		
 	}
 	
