@@ -41,6 +41,8 @@ public class MainForVhdlConversionTesting {
 			Command displayEntitiesCommand = new DisplayAllEntities();
 			displayEntitiesCommand.execute(null);
 			
+			converter.processConnectionsInArchitecture(converter.getArchitecture(), convertedEntity);
+			
 			ElectronicsToVhdlConverter e = new ElectronicsToVhdlConverter();
 			e.convertProjectToVhdl(newProject,"D:\\Processor_Creator\\VhdlHelper\\vhdl_output");
 		} catch (ProcGenException e) {

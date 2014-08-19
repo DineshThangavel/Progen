@@ -37,6 +37,7 @@ public class VhdlToElectronicsConverter {
 	// keeps track of the components that are to be resolved
 	List<Component> componentsToBeResolved = new ArrayList<Component>();
 	String workSpace;
+	Architecture coreEntityArchitecture = null;
 	
 	private VhdlFile readVhdlFile(String filePath) throws IOException, VhdlParserException{
 		VhdlFile inFile = VhdlParser.parseFile(filePath);
@@ -60,6 +61,8 @@ public class VhdlToElectronicsConverter {
 		Architecture newEntityArchitecture = architectureList.get(0);
 		processVMagicArchitecture(newEntityArchitecture,newProgenEntity);
 		
+		// saving architecture so that it can be reused later
+		this.coreEntityArchitecture = newEntityArchitecture; 
 		return newProgenEntity;
 	}
 
@@ -71,11 +74,15 @@ public class VhdlToElectronicsConverter {
 
 		// resolve dependencies on components and update childEntity details
 		resolveComponentDepencies(newProgenEntity);
+	}
+
+	public void processConnectionsInArchitecture(Architecture newEntityArchitecture,
+			electronics.logic.helper.Entity convertedEntity) {
 		
 		// identify concurrent statements
 		List<ConcurrentStatement> concurrentStatements = newEntityArchitecture.getStatements();
 		
-		processConcurrentStatements(concurrentStatements,declarationList);
+		processConcurrentStatements(concurrentStatements,convertedEntity);
 	}
 	
 	private void resolveComponentDepencies(electronics.logic.helper.Entity newProgenEntity) throws ProcGenException {
@@ -119,7 +126,7 @@ public class VhdlToElectronicsConverter {
 
 	private void processConcurrentStatements(
 			List<ConcurrentStatement> concurrentStatementList,
-			List<BlockDeclarativeItem> declarationList) {
+			electronics.logic.helper.Entity convertedEntity) {
 		
 		ConcurrentStatementProcessor concurrentStatementProcessor = new ConcurrentStatementProcessor();
 		for(ConcurrentStatement concurrentStatement:concurrentStatementList){
@@ -164,6 +171,10 @@ public class VhdlToElectronicsConverter {
 
 	protected void addUnresovedComponentToList(Component component){
 		this.componentsToBeResolved.add(component);
+	}
+
+	public Architecture getArchitecture() {
+		return this.coreEntityArchitecture;
 	}
 }
 
