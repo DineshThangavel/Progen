@@ -14,10 +14,10 @@ import helper.InvalidSignalException;
 public enum Signal {
 	HIGH("1"), LOW("0"), UNDEFINED("Z");
 
-	private String vhdlValue;
+	private String vhdlRepresentation;
 
 	Signal(String vhdlValue) {
-		this.vhdlValue = vhdlValue;
+		this.vhdlRepresentation = vhdlValue;
 	}
 
 	public static Signal getSignalFromString(String vhdlValue)
@@ -35,8 +35,4 @@ public enum Signal {
 				Consts.ExceptionMessages.SIGNAL_NOT_RECOGNISED);
 	}
 
-	public String getVhdlValue() {
-		return this.vhdlValue;
-
-	}
 }

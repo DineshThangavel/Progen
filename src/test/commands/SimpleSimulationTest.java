@@ -10,6 +10,7 @@ import org.testng.annotations.AfterMethod;
 
 import electronics.logic.helper.ElectronicsLogicFacade;
 import electronics.logic.helper.Project;
+import electronics.logic.simulation.ProjectSimulator;
 
 public class SimpleSimulationTest {
 	Project testProject = null;
@@ -42,8 +43,10 @@ public class SimpleSimulationTest {
   @Test
   public void testSimpleCircuit() {
 	  try {
-		System.out.println(logicInterface.processInput("new_and_gate"));
-
+//		System.out.println(logicInterface.processInput("new_and_gate"));
+		ProjectSimulator newPS = testProject.getProjectSimulator(); 
+		newPS.runSimulation(1000, 200);
+		  
 	} catch (ProcGenException e) {
 		Assert.fail();
 		e.printStackTrace();

@@ -3,6 +3,8 @@
  */
 package electronics.logic.helper;
 
+import java.util.HashMap;
+
 /**
  * @author DINESH THANGAVEL
  * 
@@ -11,6 +13,7 @@ public class ElectronicsLogicFacade {
 
 	private static ElectronicsLogicFacade instance = null;
 	Project baseProject = null;
+	HashMap<String,Entity> customLibrary = new HashMap<String,Entity>(); // a library loaded from vhdl files etc
 
 	private ElectronicsLogicFacade() {
 
@@ -47,4 +50,7 @@ public class ElectronicsLogicFacade {
 		return this.baseProject;
 	}
 
+	public HashMap<String,Entity> getCustomLibrary(){
+		return this.customLibrary;
+	}
 }

@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import electronics.logic.simulation.EntitySimulator;
+import electronics.logic.simulation.Simulator;
+
 /**
  * @author DINESH THANGAVEL
  * 
@@ -32,7 +35,7 @@ public class Entity {
 	
 	// any change to the child entities connection is done through events while changes in the signal of current entity is done in addInput and addOutput directly
 	private EntityConnectionManager entityConnectionManager = new EntityConnectionManager(this);
-	private Simulator entitySim = new EntitySimulator(this);
+	private EntitySimulator entitySim = new EntitySimulator(this);
 	
 	// This type of entity can be created and no valid id is present
 	public Entity(String name){
@@ -256,6 +259,7 @@ public class Entity {
 		return false;
 	}
 	
+	// TODO: Check non-existent IDs
 	public Entity getChildEntityById(String childEntityId){
 		String[] entityId = childEntityId.split("-");
 		Entity entitySearcher = this;
@@ -275,6 +279,10 @@ public class Entity {
 	public void setParent(Entity parentEntity) {
 		this.parentEntity = parentEntity;
 		
-	} 
+	}
+	
+	public EntitySimulator getEntitySimulator(){
+		return this.entitySim;
+	}
 	
 }

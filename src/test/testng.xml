@@ -9,6 +9,7 @@
       <class name="commands.NewProjectTest"/>
       <class name="commands.NewEntityTest"/>
       <class name="commands.NewConnectionTest"/>
+      <class name="commands.SimpleSimulationTest"/>
     </classes>
   </test> <!-- Test -->
 </suite> <!-- Suite -->

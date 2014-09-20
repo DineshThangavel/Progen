@@ -9,8 +9,10 @@ import de.upb.hni.vmagic.AssociationElement;
 import de.upb.hni.vmagic.concurrent.AbstractProcessStatement;
 import de.upb.hni.vmagic.concurrent.ComponentInstantiation;
 import de.upb.hni.vmagic.concurrent.ConcurrentStatementVisitor;
+import de.upb.hni.vmagic.concurrent.ConditionalSignalAssignment;
 import de.upb.hni.vmagic.expression.Expression;
 import de.upb.hni.vmagic.object.Signal;
+import de.upb.hni.vmagic.object.VhdlObject.Mode;
 import de.upb.hni.vmagic.statement.SequentialStatement;
 
 /**
@@ -20,21 +22,27 @@ import de.upb.hni.vmagic.statement.SequentialStatement;
 //TODO: Complete implementation
 public class ConcurrentStatementProcessor extends ConcurrentStatementVisitor{
 	
+	private VhdlToElectronicsConverter hostConverter = null;
+	
+	protected ConcurrentStatementProcessor(VhdlToElectronicsConverter converter){
+		this.hostConverter = converter;
+	}
+	
     protected void visitProcessStatement(AbstractProcessStatement statement) {
-    	List<SequentialStatement> seqStatements = statement.getStatements();  	
- 	
+    	this.hostConverter.addProcessStatementsToConverter(statement);
+    	
     }
     
     protected void visitComponentInstantiation(ComponentInstantiation statement) {
-    	List<AssociationElement> associationList =  statement.getPortMap();
-    	for(AssociationElement association :associationList){
-    		Expression actualExpression = association.getActual();
-    		String formalExpression = association.getFormal();
-    		if(actualExpression instanceof Signal){
-    			((Signal) actualExpression).getMode();
-    			((Signal) actualExpression).getType();
-    		}
-    		
-    	}
+    	
+    	this.hostConverter.addComponentInstantiationToConverter(statement);
+    }
+    
+    /**
+     * Visits a conditional signal assignment.
+     * @param statement the statement
+     */
+    protected void visitConditionalSignalAssignment(ConditionalSignalAssignment statement) {
+    	this.hostConverter.addStatementAssignment(statement);
     }
 }

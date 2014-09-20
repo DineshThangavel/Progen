@@ -8,6 +8,8 @@ import helper.ProcGenException;
 
 import java.security.InvalidParameterException;
 
+import electronics.logic.simulation.ProjectSimulator;
+
 /**
  * @author DINESH THANGAVEL
  *
@@ -16,7 +18,7 @@ public class Project {
 	String name;
 	ProjectSimulator projectSim = new ProjectSimulator(this);
 	EntityManager entityManager =  new EntityManager(this);
-	ProjectConnectionManager connectionManager = new ProjectConnectionManager(this);
+	ProjectConnectionManager connectionManager = new ProjectConnectionManager(this);	
 	
 	public Project(String projectName){
 		this.name = projectName;

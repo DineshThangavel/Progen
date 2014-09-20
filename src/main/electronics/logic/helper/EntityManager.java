@@ -8,6 +8,7 @@ import helper.ProcGenException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.*;
 
 import userinterface.EntityDetailsRetriever.EntityDetailsFromUser;
 import electronics.logic.helper.EntityChangeEvent.EntityChangeType;
@@ -20,6 +21,8 @@ public final class EntityManager {
 	ArrayList<Entity> baseEntityList = new ArrayList<Entity>();
 	Project parentProject;
 	
+	Logger logger = Logger.getLogger("EntityManager");
+	
 	public EntityManager(Project project) {
 		parentProject = project;
 	}
@@ -31,6 +34,7 @@ public final class EntityManager {
 	public void addBaseEntity(Entity entityToAdd) throws ProcGenException{
 		String newId = generateBaseEntityId();
 		entityToAdd.changeEntityId(newId);
+		logger.log(Level.FINEST, "Adding enitity to project");
 		baseEntityList.add(entityToAdd);
 		
 		// create EntityChange event
@@ -80,6 +84,10 @@ public final class EntityManager {
 		this.parentProject.publishEntityChangeEvent(entityModificationEvent);
 	}
 	
+	/*
+	 * @return entity if entity is found
+	 * 		   null if input could not be processed	
+	 */
 	public Entity getEntityById(String entityId){
 		
 		String[] entityLocations = entityId.split("-");
@@ -92,11 +100,16 @@ public final class EntityManager {
 				return null;
 			
 			// Ids start with 1. So need to subtract 1 to make it an index of array.
-			Entity baseEntity = baseEntityList.get(Integer.valueOf(baseEntityId)-1);
+			int entityIndex = Integer.valueOf(baseEntityId)-1;
+			if(entityIndex < baseEntityList.size()){
+				Entity baseEntity = baseEntityList.get(entityIndex);
+				assert(baseEntity != null);
+
+				Entity requiredEntity = baseEntity.getChildEntityById(entityId);
+				return requiredEntity;
+			}
 			
-			assert(baseEntity != null);
-			Entity requiredEntity = baseEntity.getChildEntityById(entityId);
-			return requiredEntity;
+			return null;
 			
 		}catch(NumberFormatException e){
 			return null;
