@@ -174,10 +174,9 @@ public class Entity {
 	}
 
 
-	public SignalBus defaultBehaviour(List<SignalBus> inputList)
+	public void defaultBehaviour()
 			throws ProcGenException {
 
-		return null;
 	}
 
 	/*

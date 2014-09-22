@@ -20,10 +20,17 @@ import electronics.logic.helper.SignalBus;
 public class OrGateTest {
 
 	Entity orGateForTest;
+	private OrGate orGateForTest2;
 
 	@BeforeMethod
 	public void beforeMethod() {
-		orGateForTest = new OrGate("OR_1", "testOrGate");
+		try {
+			orGateForTest = new OrGate("OR_1", "testOrGate",2,1);
+			orGateForTest2 = new OrGate("OR_2", "testOrGate",2,4);
+		} catch (ProcGenException e) {
+			Assert.fail();
+			e.printStackTrace();
+		}
 	}
 
 	@AfterMethod
@@ -44,13 +51,13 @@ public class OrGateTest {
 	public void defaultBehaviourTestWithTwoInputs(Signal input1, Signal input2,
 			Signal expectedValue) {
 
-		List<SignalBus> inputSignalBusList = new ArrayList<SignalBus>();
-		inputSignalBusList.add(new SignalBus("input1", 1, input1));
-		inputSignalBusList.add(new SignalBus("input2", 1, input2));
-		SignalBus orGateOutput;
+		orGateForTest.getInputPortList().get(0).setValue(input1);
+		orGateForTest.getInputPortList().get(1).setValue(input2);
+
 		try {
-			orGateOutput = orGateForTest
-					.defaultBehaviour(inputSignalBusList);
+			orGateForTest.defaultBehaviour();
+			
+			SignalBus orGateOutput = orGateForTest.getOutputPortList().get(0);
 			Assert.assertEquals(orGateOutput.getValue().length, 1);
 			Assert.assertEquals(orGateOutput.getValue()[0], expectedValue);
 		} catch (ProcGenException e) {
@@ -78,12 +85,20 @@ public class OrGateTest {
 	  public void defaultBehaviourTest(SignalBus input1,SignalBus input2, SignalBus expected) {
 		  List<SignalBus> inputList = new ArrayList();
 		  
-		  inputList.add(input1);
+		  try {
+			orGateForTest2.getInputPortList().get(0).setValue(input1.getValue());
+			orGateForTest2.getInputPortList().get(1).setValue(input2.getValue());
+		} catch (InvalidSignalException e1) {
+			Assert.fail();
+			e1.printStackTrace();
+		}
+
 		  inputList.add(input2);
-		  SignalBus orGateOutput;
+		  
 		try {
-			orGateOutput = orGateForTest.defaultBehaviour(inputList);
-			  Assert.assertEquals(orGateOutput.getBusWidth(), expected.getBusWidth());
+			orGateForTest2.defaultBehaviour();
+			SignalBus orGateOutput = orGateForTest2.getOutputPortList().get(0);
+			Assert.assertEquals(orGateOutput.getBusWidth(), expected.getBusWidth());
 				Assert.assertEquals(orGateOutput.getValue(),expected.getValue());
 		} catch (ProcGenException e) {
 			Assert.fail();

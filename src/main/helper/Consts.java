@@ -43,6 +43,11 @@ public class Consts {
 		public static final String CONNECT = "connect";
 		public static final String CLOSE_PROJECT = "close_project";
 		public static final String NEW_AND_GATE = "new_and_gate";
+		public static final String SIMULATE = "simulate";
+		public static final String NEW_INPUT_SIMULATOR = "new_input_simulator";
+		public static final String CHANGE_INPUT_FOR_SIMULATION = "change_sim_input";
+		public static final String ADD_INPUT_STIMULUS = "add_input_stimulus";
+		public static final String NEW_OR_GATE = "new_or_gate";
 	}
 	
 	public static class CommandResults{
@@ -54,6 +59,12 @@ public class Consts {
 		public static final String SUCCESS_NEW_CONNECTION_CREATION = "Successfully created new Connection between ";
 		public static final String SUCCESS_CLOSED_PROJECT = "Successfully closed the project ";
 		public static final String SUCCESS_NEW_AND_CREATION = "Successfully created new AND gate with Id ";
+		public static final String SUCCESS_SIMULATION_COMPLETED = "Succesfully simulated project";
+		public static final String SUCCESS_NEW_INPUT_SIMULATOR = "Successfully created new input Simulator";
+		public static final String INPUT_SIM_NOT_CONNECTED = "Please check output connection of input simulator ";
+		public static final String ERROR_SIM_NOT_SUCCESSFUL = "Error occured while simulating";
+		public static final String SUCCESS_ADDED_STIMULI_TO_SIMULATOR = "Successfully added stimuli to simulator";
+		public static final String SUCCESS_NEW_OR_CREATION = "Successfully created new OR gate with Id";
 	}
 	
 	public static class ExceptionMessages{
@@ -67,6 +78,8 @@ public class Consts {
 		public static final String ERROR_CREATING_ENTITY = "Unable to create entity";
 		public static final String ERROR_CREATING_CONNECTION = "Unable to create connection";
 		public static final String ERROR_CREATING_INPUT_SIM = "Unable to create input simulator";
+		public static final String ENTITY_NOT_FOUND ="Entity with given Id could not be found";
+		public static final String INPUT_NOT_RECOGNISED = "The Input could not be recognised";
 	}
 	
 	public static class ErrorCodes{

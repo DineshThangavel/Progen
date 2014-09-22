@@ -31,6 +31,11 @@ public class CommandFactory {
 		cmdMapper.put(CommandInputText.CONNECT, new ConnectCommand());
 		cmdMapper.put(CommandInputText.CLOSE_PROJECT, new CloseProjectCommand());
 		cmdMapper.put(CommandInputText.NEW_AND_GATE, new NewAndGateCommand());
+		cmdMapper.put(CommandInputText.NEW_OR_GATE, new NewOrGateCommand());
+		cmdMapper.put(CommandInputText.NEW_INPUT_SIMULATOR, new NewInputSimulatorCommand());
+		cmdMapper.put(CommandInputText.SIMULATE, new StartSimulation());
+		cmdMapper.put(CommandInputText.CHANGE_INPUT_FOR_SIMULATION, new ChangeInputSimulatorValueCommand());
+		cmdMapper.put(CommandInputText.ADD_INPUT_STIMULUS, new AddInputStimulusCommand());
 	}
 
 	public Command makeCommand(String userInputText)

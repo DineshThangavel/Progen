@@ -3,17 +3,17 @@
  */
 package logic.commandslist;
 
-import electronics.logic.entities.AndGate;
-import electronics.logic.helper.ElectronicsLogicFacade;
 import helper.Consts;
 import helper.ProcGenException;
 import logic.UndoableCommand;
+import electronics.logic.entities.OrGate;
+import electronics.logic.helper.ElectronicsLogicFacade;
 
 /**
  * @author DINESH THANGAVEL
  *
  */
-public class NewAndGateCommand implements UndoableCommand{
+public class NewOrGateCommand implements UndoableCommand {
 
 	@Override
 	public String execute(String arguments) throws ProcGenException {
@@ -33,9 +33,9 @@ public class NewAndGateCommand implements UndoableCommand{
 			noOfInputs = Integer.parseInt(splitArguments[1]);
 		}
 		
-		AndGate newAndGate = new AndGate("", nameOfGate,noOfInputs);
-		String entityId = activeAppDetails.getActivePrjectInstance().getEntityManager().addEntity(newAndGate);
-		return Consts.CommandResults.SUCCESS_NEW_AND_CREATION + entityId;
+		OrGate newOrGate = new OrGate("", nameOfGate,noOfInputs);
+		String entityId = activeAppDetails.getActivePrjectInstance().getEntityManager().addEntity(newOrGate);
+		return Consts.CommandResults.SUCCESS_NEW_OR_CREATION + entityId;
 	}
 
 	@Override

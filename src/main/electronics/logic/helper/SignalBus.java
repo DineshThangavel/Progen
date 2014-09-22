@@ -3,6 +3,11 @@
  */
 package electronics.logic.helper;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
+
 import helper.Consts;
 import helper.InvalidSignalException;
 
@@ -12,9 +17,10 @@ import helper.InvalidSignalException;
  */
 public class SignalBus {
 
-	Signal value[];
-	String name;
-
+	private Signal value[];
+	private String name;
+		
+	private List<PropertyChangeListener> listener = new ArrayList<PropertyChangeListener>();
 	public String getName() {
 		return this.name;
 	}
@@ -52,18 +58,28 @@ public class SignalBus {
 
 		this.name = name;
 	}
-
+	
 	public boolean setValue(Signal valueToSet[])
 			throws InvalidSignalException {
-
+		
+		// copy the current value before changing it
+		Signal[] previousSignalValue = new Signal[this.value.length];
+		for (int i = 0; i < value.length; i++) {
+			previousSignalValue[i] = value[i];
+		}
+		
 		if (value.length != valueToSet.length)
 			throw new InvalidSignalException(
 					Consts.ErrorCodes.UNEQUAL_LENGTH_SIGNAL_ASSIGNMENT,
 					Consts.ExceptionMessages.UNEQUAL_LENGTH_SIGNAL_ASSIGNMENT);
 
+		// assign new value for the signal
 		for (int i = 0; i < value.length; i++) {
 			value[i] = valueToSet[i];
 		}
+		
+		notifyListeners(this,this.name,previousSignalValue,value);
+		
 		return true;
 	}
 
@@ -74,10 +90,19 @@ public class SignalBus {
 	 * @return
 	 */
 	public boolean setValue(Signal valueToSet) {
+		
+		// copy the current value before changing it
+		Signal[] previousSignalValue = new Signal[this.value.length];
+		for (int i = 0; i < value.length; i++) {
+			previousSignalValue[i] = value[i];
+		}
+		
+		// assign new value for the signal
 		for (int i = 0; i < value.length; i++) {
 			value[i] = valueToSet;
 		}
 
+		notifyListeners(this,this.name,previousSignalValue,value);
 		return true;
 	}
 
@@ -95,8 +120,17 @@ public class SignalBus {
 			throw new InvalidSignalException(
 					Consts.ErrorCodes.SIGNAL_INDEX_NOT_FOUND,
 					Consts.ExceptionMessages.UNEQUAL_LENGTH_SIGNAL_ASSIGNMENT);
-
+		
+		// copy the current value before changing it
+		Signal[] previousSignalValue = new Signal[this.value.length];
+		for (int i = 0; i < value.length; i++) {
+			previousSignalValue[i] = value[i];
+		}
+		
+		// set the new value
 		value[indexToSet] = valueToSet;
+		
+		notifyListeners(this,this.name,previousSignalValue,value);
 		return true;
 	}
 
@@ -117,5 +151,15 @@ public class SignalBus {
 		
 		return newSignalBusCopy;
 	}
+	
+	  private void notifyListeners(Object object, String value, Signal[] value3, Signal[] valueToSet) {
+		    for (PropertyChangeListener name : listener) {
+		      name.propertyChange(new PropertyChangeEvent(this, value, value3, valueToSet));
+		    }
+		  }
+
+	  public void addChangeListener(PropertyChangeListener newListener) {
+		    listener.add(newListener);
+		  }
 
 }

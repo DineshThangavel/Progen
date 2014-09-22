@@ -22,7 +22,12 @@ public class AndGateTest {
 
 	@BeforeMethod
 	public void beforeMethod() {
-		andGateForTest = new AndGate("AND_1", "testAndGate");
+		try {
+			andGateForTest = new AndGate("AND_1", "testAndGate",2,4);
+		} catch (ProcGenException e) {
+			Assert.fail();
+			e.printStackTrace();
+		}
 	}
 
 	@AfterMethod
@@ -55,13 +60,19 @@ public class AndGateTest {
 	@Test(dataProvider = "dp")
 	public void defaultBehaviourTest(SignalBus input1, SignalBus input2,
 			SignalBus expected) {
-		List<SignalBus> inputList = new ArrayList();
 
-		inputList.add(input1);
-		inputList.add(input2);
-		SignalBus andGateOutput;
+		
 		try {
-			andGateOutput = andGateForTest.defaultBehaviour(inputList);
+			andGateForTest.getInputPortList().get(0).setValue(input1.getValue());
+			andGateForTest.getInputPortList().get(1).setValue(input2.getValue());
+		} catch (InvalidSignalException e1) {
+			Assert.fail();
+			e1.printStackTrace();
+		}
+		
+		try {
+			andGateForTest.defaultBehaviour();
+			SignalBus andGateOutput = andGateForTest.getOutputPortList().get(0);
 			Assert.assertEquals(andGateOutput.getBusWidth(),
 					expected.getBusWidth());
 			Assert.assertEquals(andGateOutput.getValue(), expected.getValue());

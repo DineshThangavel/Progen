@@ -9,7 +9,9 @@
       <class name="commands.NewProjectTest"/>
       <class name="commands.NewEntityTest"/>
       <class name="commands.NewConnectionTest"/>
-      <class name="commands.SimpleSimulationTest"/>
+      <class name="commands.ClockSimulationTest"/>
+      <class name="commands.SimpleSimulationTestWithAndGate"/>
+      <class name="commands.SimpleSimulationTestWithOrGate"/>
     </classes>
   </test> <!-- Test -->
 </suite> <!-- Suite -->
