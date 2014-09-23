@@ -63,11 +63,11 @@ public class NewInputSimulatorCommand implements UndoableCommand{
 		portToConnect.setValue(Signal.LOW);
 		entityToConnect.defaultBehaviour();
 		
-		SignalBusObserver newSignalBusObserver = new SignalBusObserver(newInputSimulator,activeProjectInstance.getProjectSimulator());
+		SignalBusObserver newSignalBusObserver = new SignalBusObserver(newInputSimulator,activeProjectInstance.getProjectSimulator(),newInputSimulator.getName());
 		
 		// hook up the entity simulator to the signal observer
 		newSignalBusObserver.addEntitySimulatorListener(entityToConnect.getEntitySimulator());
-		proSim.getSignalObserverList().add(newSignalBusObserver);
+		proSim.getSignalObserverMap().put(newInputSimulator, newSignalBusObserver);
 		
 		return Consts.CommandResults.SUCCESS_NEW_INPUT_SIMULATOR;
 	}

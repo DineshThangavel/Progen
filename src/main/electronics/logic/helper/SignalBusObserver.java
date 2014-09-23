@@ -4,6 +4,7 @@
 package electronics.logic.helper;
 
 import helper.Consts;
+import helper.InvalidSignalException;
 import helper.ProcGenException;
 
 import java.beans.PropertyChangeEvent;
@@ -23,13 +24,16 @@ import electronics.logic.simulation.ProjectSimulator;
 public class SignalBusObserver implements PropertyChangeListener{
 	
 	ProjectSimulator hostSimulator; // signal observer keeps track of hostSimulator so as to synchronize time with the simulator
-	List<SignalValueRecord> signalLogValues = new ArrayList<SignalValueRecord>();
+	String nameOfObserver; // to help in debugging
 	
+	List<SignalValueRecord> signalLogValues = new ArrayList<SignalValueRecord>();
+	List<Connection> connectionsToUpdate;
 	List<EntitySimulator> entitySimulatorListeners = new ArrayList<EntitySimulator>();
 	
-	public SignalBusObserver(SignalBus signalBusToObserve,ProjectSimulator hostSimulator) {
+	public SignalBusObserver(SignalBus signalBusToObserve,ProjectSimulator hostSimulator,String name) {
 		this.hostSimulator = hostSimulator;
 		signalBusToObserve.addChangeListener(this);
+		this.nameOfObserver = name;
 	}
 	
 	@Override
@@ -40,6 +44,14 @@ public class SignalBusObserver implements PropertyChangeListener{
 		
 		if(!Arrays.deepEquals(oldValue, newValue)){
 		this.signalLogValues.add(new SignalValueRecord(currentTime,oldValue,newValue));
+		
+		try {
+			updateOtherConnectedSignals(newValue);
+		} catch (InvalidSignalException e1) {
+			// TODO: convert this to log message
+			System.out.println("Error in assigning new value to output");
+			e1.printStackTrace();
+		}
 		
 		for(EntitySimulator eSim:entitySimulatorListeners ){
 			try {
@@ -53,6 +65,14 @@ public class SignalBusObserver implements PropertyChangeListener{
 		}
 	}
 	
+	private void updateOtherConnectedSignals(Signal[] newValue) throws InvalidSignalException {
+		if (this.connectionsToUpdate != null) {
+			for (Connection connectionToUpdate : this.connectionsToUpdate) {
+				connectionToUpdate.outputSignal.setValue(newValue);
+			}
+		}
+	}
+
 	public Signal[] getLatestValueOfSignal(){
 		int lastIndexPosition = this.signalLogValues.size()-1;
 		SignalValueRecord latestRecord = this.signalLogValues.get(lastIndexPosition);
@@ -67,6 +87,10 @@ public class SignalBusObserver implements PropertyChangeListener{
 	
 	public void addEntitySimulatorListener(EntitySimulator eSim){
 		this.entitySimulatorListeners.add(eSim);
+	}
+	
+	public void updateConnectionList(List<Connection> connectionListToUpdate){
+		this.connectionsToUpdate = connectionListToUpdate;
 	}
 	
 	/*

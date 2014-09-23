@@ -12,6 +12,7 @@
       <class name="commands.ClockSimulationTest"/>
       <class name="commands.SimpleSimulationTestWithAndGate"/>
       <class name="commands.SimpleSimulationTestWithOrGate"/>
+      <class name="commands.SimpleSimulationWithTwoEntities"/>
     </classes>
   </test> <!-- Test -->
 </suite> <!-- Suite -->

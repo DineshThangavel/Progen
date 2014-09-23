@@ -51,7 +51,7 @@ public class ClockSimulationTest {
   public void testCircuitClock() {
 	  try {
 		ProjectSimulator newPS = testProject.getProjectSimulator();
-		SignalBusObserver prjClkObserver = new SignalBusObserver(newPS.getProjectClock(),newPS); 
+		SignalBusObserver prjClkObserver = new SignalBusObserver(newPS.getProjectClock(),newPS,"clockObserver"); 
 		
 		float timeToSimulate = 1000;
 		float clockPeriod = 200;

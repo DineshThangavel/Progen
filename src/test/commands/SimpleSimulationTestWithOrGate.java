@@ -52,7 +52,7 @@ public class SimpleSimulationTestWithOrGate {
 					System.out.println(logicInterface.processInput("new_input_simulator simulator1 1 1 input0"));
 					System.out.println(logicInterface.processInput("new_input_simulator simulator2 1 1 input1"));
 					
-					SignalBusObserver outputObserver = new SignalBusObserver(testProject.getEntityManager().getEntityById("1").getOutputByName("output"),testProject.getProjectSimulator()); 
+					SignalBusObserver outputObserver = new SignalBusObserver(testProject.getEntityManager().getEntityById("1").getOutputByName("output"),testProject.getProjectSimulator(),"1-output"); 
 					
 					System.out.println(testProject.getEntityManager().getEntityById("1").getOutputByName("output").getValue());
 					

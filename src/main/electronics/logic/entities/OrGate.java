@@ -66,6 +66,11 @@ public class OrGate extends Entity {
 					if (input.getValue()[i] == Signal.HIGH) {
 						orGateOutput.setValue(Signal.HIGH, i);
 					}
+					
+					else if (input.getValue()[i] == Signal.UNDEFINED) {
+						orGateOutput.setValue(Signal.UNDEFINED, i);
+						break;
+					}
 				}
 			}
 		}

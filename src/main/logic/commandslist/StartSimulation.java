@@ -67,7 +67,7 @@ public class StartSimulation implements Command{
 			return Consts.CommandResults.CREATE_PROJECT_BEFORE_ENTITY;
 		}
 
-		initialiseConnectionTriggersInProject(activeProjectInstance);
+//		initialiseConnectionTriggersInProject(activeProjectInstance);
 		ProjectSimulator projectSim = activeProjectInstance.getProjectSimulator();
 		
 		float timeToSimulate = 1000;
@@ -76,33 +76,34 @@ public class StartSimulation implements Command{
 		return Consts.CommandResults.SUCCESS_SIMULATION_COMPLETED;
 	}
 	
-	private void initialiseConnectionTriggersInProject(Project activeProjectInstance){
-		
-		ProjectConnectionManager pcm = activeProjectInstance.getConnectionManager();
-		EntityManager em = activeProjectInstance.getEntityManager();
-		List<Entity> baseEntityList = em.getBaseEntities();
-		
-		for(Entity baseEntity : baseEntityList){
-			HashMap<String,List<Connection>> entityConnectionDetails = pcm.getConnectionForEntity(baseEntity.getId());
-			List<SignalBus> signalsInEntity = baseEntity.getOutputPortList();
-			for(SignalBus outputSignal: signalsInEntity){
-				SignalBusObserver busMonitor = new SignalBusObserver(outputSignal,activeProjectInstance.getProjectSimulator());
-				
-				List<Connection> connectionListForOutputSignal= entityConnectionDetails.get(outputSignal);
-				if(connectionListForOutputSignal!=null){
-				for(Connection signalConnection:connectionListForOutputSignal){
-					String destinationEntityId = signalConnection.getDestinationEntityId();
-					Entity destinationEntity = em.getEntityById(destinationEntityId);
-					
-					if(destinationEntity != null){
-						// TODO: take care of case where one output is connected to multiple inputs
-						busMonitor.addEntitySimulatorListener(destinationEntity.getEntitySimulator());
-					}
-				}
-				}
-				activeProjectInstance.getProjectSimulator().getSignalObserverList().add(busMonitor);
-			}
-		}
-	}
+//	private void initialiseConnectionTriggersInProject(Project activeProjectInstance){
+//		
+//		ProjectConnectionManager pcm = activeProjectInstance.getConnectionManager();
+//		EntityManager em = activeProjectInstance.getEntityManager();
+//		List<Entity> baseEntityList = em.getBaseEntities();
+//		
+//		for(Entity baseEntity : baseEntityList){
+//			HashMap<String,List<Connection>> entityConnectionDetails = pcm.getConnectionForEntity(baseEntity.getId());
+//			List<SignalBus> signalsInEntity = baseEntity.getOutputPortList();
+//			for(SignalBus outputSignal: signalsInEntity){
+//				SignalBusObserver busMonitor = new SignalBusObserver(outputSignal,activeProjectInstance.getProjectSimulator(),baseEntity.getId()+"-"+outputSignal.getName());
+//				
+//				List<Connection> connectionListForOutputSignal= entityConnectionDetails.get(outputSignal.getName());
+//				if(connectionListForOutputSignal!=null){
+//					busMonitor.addConnectionListToUpdate(connectionListForOutputSignal);
+//				for(Connection signalConnection:connectionListForOutputSignal){
+//					String destinationEntityId = signalConnection.getDestinationEntityId();
+//					Entity destinationEntity = em.getEntityById(destinationEntityId);
+//					
+//					if(destinationEntity != null){
+//						// TODO: take care of case where one output is connected to multiple inputs
+//						busMonitor.addEntitySimulatorListener(destinationEntity.getEntitySimulator());
+//					}
+//				}
+//				}
+//				activeProjectInstance.getProjectSimulator().getSignalObserverMap().add(busMonitor);
+//			}
+//		}
+//	}
 
 }

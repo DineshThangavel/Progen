@@ -3,14 +3,23 @@
  */
 package logic.commandslist;
 
+import java.util.HashMap;
+import java.util.List;
+
+import electronics.logic.helper.Connection;
 import electronics.logic.helper.ConnectionManager;
 import electronics.logic.helper.ConnectionType;
 import electronics.logic.helper.ElectronicsLogicFacade;
 import electronics.logic.helper.Entity;
 import electronics.logic.helper.EntityManager;
+import electronics.logic.helper.Project;
+import electronics.logic.helper.ProjectConnectionManager;
 import electronics.logic.helper.Signal;
 import electronics.logic.helper.SignalBus;
+import electronics.logic.helper.SignalBusObserver;
+import electronics.logic.simulation.ProjectSimulator;
 import helper.Consts;
+import helper.InvalidSignalException;
 import helper.ProcGenException;
 import logic.UndoableCommand;
 
@@ -58,30 +67,32 @@ public class ConnectCommand implements UndoableCommand {
 		EntityConnectionType entityConnectionType = identifyConnectionType(
 				sourceEntity, destinationEntity);
 
+		String feedback =null;
+		
 		if (entityConnectionType == EntityConnectionType.INTER_BASE_ENTITIES_CONNECTION) {
-			return establishInterBaseEntityConnection(sourceSignal,
+			feedback = establishInterBaseEntityConnection(sourceSignal,
 					destinationSignal, activeAppDetails, sourceEntity,
 					destinationEntity);
 		}
 
 		else if (entityConnectionType == EntityConnectionType.INTER_CHILD_CONNECTION) {
-			return establishInterChildEntityConnection(sourceSignal,
+			feedback =  establishInterChildEntityConnection(sourceSignal,
 					destinationSignal, activeAppDetails, sourceEntity,
 					destinationEntity);
 		}
 
 		else if (entityConnectionType == EntityConnectionType.PARENT_CHILD_CONNECTION) {
-			return establishParentChildConnection(sourceSignal,
+			feedback =  establishParentChildConnection(sourceSignal,
 					destinationSignal, activeAppDetails, sourceEntity,
 					destinationEntity);
 		}
 		
 		else if (entityConnectionType == EntityConnectionType.CHILD_PARENT_CONNECTION) {
-			return establishChildParentConnection(sourceSignal,
+			feedback = establishChildParentConnection(sourceSignal,
 					destinationSignal, activeAppDetails, sourceEntity,
 					destinationEntity);
 		}
-		return null;
+		return feedback;
 	}
 
 	private String establishParentChildConnection(String sourceSignal,
@@ -99,9 +110,18 @@ public class ConnectCommand implements UndoableCommand {
 
 				cm.createConnectionBetweenBaseEntities(sourceEntity, destinationEntity,
 						inputSignal, outputSignal, ConnectionType.DIRECT_CONNECTION);
+				
+				assignValueToOutputSignal(inputSignal, outputSignal,ConnectionType.DIRECT_CONNECTION);
+				
 				return Consts.CommandResults.SUCCESS_NEW_CONNECTION_CREATION
 						+ sourceEntity.getName() + "-" + sourceSignal + ":"
 						+ destinationEntity.getName() + "-" + destinationSignal;
+	}
+
+	public void assignValueToOutputSignal(SignalBus inputSignal,
+			SignalBus outputSignal, ConnectionType directConnection) throws InvalidSignalException {
+		// TODO: Check for connection type here
+		outputSignal.setValue(inputSignal.getValue());
 	}
 
 	private String establishChildParentConnection(String sourceSignal,
@@ -119,6 +139,9 @@ public class ConnectCommand implements UndoableCommand {
 
 		cm.createConnectionBetweenBaseEntities(sourceEntity, destinationEntity,
 				inputSignal, outputSignal, ConnectionType.DIRECT_CONNECTION);
+		
+		assignValueToOutputSignal(inputSignal, outputSignal,ConnectionType.DIRECT_CONNECTION);
+		
 		return Consts.CommandResults.SUCCESS_NEW_CONNECTION_CREATION
 				+ sourceEntity.getName() + "-" + sourceSignal + ":"
 				+ destinationEntity.getName() + "-" + destinationSignal;
@@ -143,6 +166,9 @@ public class ConnectCommand implements UndoableCommand {
 
 		cm.createConnectionBetweenBaseEntities(sourceEntity, destinationEntity,
 				inputSignal, outputSignal, ConnectionType.DIRECT_CONNECTION);
+		
+		assignValueToOutputSignal(inputSignal, outputSignal,ConnectionType.DIRECT_CONNECTION);
+		
 		return Consts.CommandResults.SUCCESS_NEW_CONNECTION_CREATION
 				+ sourceEntity.getName() + "-" + sourceSignal + ":"
 				+ destinationEntity.getName() + "-" + destinationSignal;
@@ -162,9 +188,43 @@ public class ConnectCommand implements UndoableCommand {
 				.getConnectionManager();
 		cm.createConnectionBetweenBaseEntities(sourceEntity, destinationEntity,
 				inputSignal, outputSignal, ConnectionType.DIRECT_CONNECTION);
+		
+		initialiseConnectionTrigger(activeAppDetails,sourceEntity,destinationEntity,inputSignal,outputSignal);
+		assignValueToOutputSignal(inputSignal, outputSignal,ConnectionType.DIRECT_CONNECTION);
+		destinationEntity.getEntitySimulator().runSimulation();
+		
 		return Consts.CommandResults.SUCCESS_NEW_CONNECTION_CREATION
 				+ sourceEntity.getName() + "-" + sourceSignal + ":"
 				+ destinationEntity.getName() + "-" + destinationSignal;
+	}
+	
+	// TODO: might be inefficient
+	private void initialiseConnectionTrigger(ElectronicsLogicFacade activeAppDetails,Entity sourceEntity,Entity destinationEntity,
+			SignalBus sourceSignal,SignalBus destinationSignal){
+
+		Project activeProjectInstance = activeAppDetails.getActivePrjectInstance();
+		ProjectSimulator pSim = activeProjectInstance.getProjectSimulator();
+		
+		SignalBusObserver sourceBusMonitor =null;
+		if(pSim.getSignalObserverMap().containsKey(sourceSignal)){
+			sourceBusMonitor = pSim.getSignalObserverMap().get(sourceSignal);
+		}
+		else{
+			sourceBusMonitor = new SignalBusObserver(sourceSignal, pSim, sourceEntity.getId()+"-"+sourceSignal.getName());
+		}	
+		
+		ProjectConnectionManager pcm = activeProjectInstance.getConnectionManager();
+			
+			List<Connection> newConnectionListForSourceSignal = pcm.getConnectionForEntity(sourceEntity.getId()).get(sourceSignal.getName());
+			if(newConnectionListForSourceSignal!=null){
+				sourceBusMonitor.updateConnectionList(newConnectionListForSourceSignal);
+			}
+			
+			//TODO: need to check if the destination entity simulator is already present
+			sourceBusMonitor.addEntitySimulatorListener(destinationEntity.getEntitySimulator());
+			
+			pSim.getSignalObserverMap().put(sourceSignal, sourceBusMonitor);
+		
 	}
 
 	private EntityConnectionType identifyConnectionType(Entity sourceEntity,

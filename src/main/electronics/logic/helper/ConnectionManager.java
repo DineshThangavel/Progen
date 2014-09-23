@@ -210,45 +210,29 @@ public class ConnectionManager {
 				.add(newConnectionToAdd);
 	}
 
-
+/*
+ * @return: returns a reference to connections. Hence do not edit the values obtained
+ */
 	public List<Connection> getConnectionsForSignal(String EntityId,
 			String SignalName) {
 		// TODO: check for entityId and validate
 		
 		List<Connection> connectionList = connectionDirectory.get(EntityId)
 				.get(SignalName);
-		List<Connection> newConnectionList = new ArrayList<Connection>();
-		for (Connection connection : connectionList) {
-			newConnectionList.add(connection.deepCopy());
-		}
-		return newConnectionList;
+	
+		return connectionList;
 	}
 	
-	// returns a deep copy of connections
+	/*
+	 * 	@return: returns a reference to connections. Hence do not edit the values obtained
+	 */
 	public HashMap<String, List<Connection>> getConnectionForEntity(String EntityId){
 		
 		// TODO: validate entity Id and check if entity is present with that Id
 		
 		HashMap<String, List<Connection>> signalConnectionMapping = this.connectionDirectory
 				.get(EntityId);
-		HashMap<String, List<Connection>> signalConnectionMappingCopy = new HashMap<String, List<Connection>>();
-
-		Iterator signalConnIterator = signalConnectionMapping.keySet()
-				.iterator();
-		while (signalConnIterator.hasNext()) {
-			String signalName = (String) signalConnIterator.next();
-			List<Connection> connectionList = signalConnectionMapping
-					.get(signalName);
-			List<Connection> connectionListCopy = new ArrayList<Connection>();
-
-			for (Connection connection : connectionList) {
-				Connection newConnectionCopy = connection.deepCopy();
-				connectionListCopy.add(newConnectionCopy);
-			}
-			signalConnectionMappingCopy.put(signalName, connectionListCopy);
-		}
-
-		return signalConnectionMappingCopy;
+		
+		return signalConnectionMapping;
 	}
-
 }

@@ -67,6 +67,11 @@ public class AndGate extends Entity{
 					if (input.getValue()[i] == Signal.LOW) {
 						andGateOutput.setValue(Signal.LOW, i);
 					}
+					
+					else if(input.getValue()[i] == Signal.UNDEFINED){
+						andGateOutput.setValue(Signal.UNDEFINED, i);
+						break;
+					}
 				}
 			}
 		}

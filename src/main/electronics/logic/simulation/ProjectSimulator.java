@@ -36,9 +36,9 @@ public class ProjectSimulator extends Simulator{
 	
 	HashMap<String,SignalBus> signalsConnectedToProjectClk = new HashMap<String,SignalBus>();
 	
-	private List<SignalBusObserver> signalObserverList = new ArrayList<SignalBusObserver>();
+	private HashMap<SignalBus,SignalBusObserver> signalObserverList = new HashMap<SignalBus,SignalBusObserver>();
 	
-	public List<SignalBusObserver> getSignalObserverList() {
+	public HashMap<SignalBus,SignalBusObserver> getSignalObserverMap() {
 		return signalObserverList;
 	}
 

@@ -44,7 +44,7 @@ public class OrGateTest {
 				new Object[] { Signal.HIGH, Signal.LOW, Signal.HIGH },
 				new Object[] { Signal.LOW, Signal.HIGH, Signal.HIGH },
 				new Object[] { Signal.HIGH, Signal.HIGH, Signal.HIGH },
-				new Object[] { Signal.HIGH, Signal.UNDEFINED, Signal.HIGH } };
+				new Object[] { Signal.HIGH, Signal.UNDEFINED, Signal.UNDEFINED } };
 	}
 
 	@Test(dataProvider = "dp")
