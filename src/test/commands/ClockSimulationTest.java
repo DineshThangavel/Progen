@@ -51,7 +51,7 @@ public class ClockSimulationTest {
   public void testCircuitClock() {
 	  try {
 		ProjectSimulator newPS = testProject.getProjectSimulator();
-		SignalBusObserver prjClkObserver = new SignalBusObserver(newPS.getProjectClock(),newPS,"clockObserver"); 
+		SignalBusObserver prjClkObserver = new SignalBusObserver(newPS.getRisingEdgeTriggerSignal(),newPS,"clockObserver"); 
 		
 		float timeToSimulate = 1000;
 		float clockPeriod = 200;
@@ -66,7 +66,7 @@ public class ClockSimulationTest {
 		Signal[] initialNewSignal = new Signal[1];
 		initialNewSignal[0] = Signal.HIGH;
 		
-		SignalValueRecord recordAfterChange = new SignalValueRecord(0,initialOldSignal,initialNewSignal);
+		SignalValueRecord recordAfterChange = new SignalValueRecord(100,initialOldSignal,initialNewSignal);
 		
 		Assert.assertEquals(actualClkValues.get(0),recordAfterChange);
 		float t = 0;

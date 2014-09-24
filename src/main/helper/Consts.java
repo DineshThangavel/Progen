@@ -48,6 +48,9 @@ public class Consts {
 		public static final String CHANGE_INPUT_FOR_SIMULATION = "change_sim_input";
 		public static final String ADD_INPUT_STIMULUS = "add_input_stimulus";
 		public static final String NEW_OR_GATE = "new_or_gate";
+		public static final String NEW_REGISTER_COMMAND = "new_register";
+		public static final String GET_SIGNALBUS_VALUE = "get_signalbus_value";
+		public static final String CONNECT_TO_CLOCK = "connect_to_clock";
 	}
 	
 	public static class CommandResults{
@@ -64,7 +67,10 @@ public class Consts {
 		public static final String INPUT_SIM_NOT_CONNECTED = "Please check output connection of input simulator ";
 		public static final String ERROR_SIM_NOT_SUCCESSFUL = "Error occured while simulating";
 		public static final String SUCCESS_ADDED_STIMULI_TO_SIMULATOR = "Successfully added stimuli to simulator";
-		public static final String SUCCESS_NEW_OR_CREATION = "Successfully created new OR gate with Id";
+		public static final String SUCCESS_NEW_OR_CREATION = "Successfully created new OR gate with Id ";
+		public static final String SUCCESS_CHANGED_SIMULATOR_VALUE = "Successfully changed simulator value";
+		public static final String CLOCK = "Clock-";
+		public static final String SUCCESS_NEW_REGISTER_CREATION = "Successfully created new Register with Id ";
 	}
 	
 	public static class ExceptionMessages{
@@ -80,6 +86,7 @@ public class Consts {
 		public static final String ERROR_CREATING_INPUT_SIM = "Unable to create input simulator";
 		public static final String ENTITY_NOT_FOUND ="Entity with given Id could not be found";
 		public static final String INPUT_NOT_RECOGNISED = "The Input could not be recognised";
+		public static final String INCORRECT_TRIGGER_TYPE = "The trigger type could not be recognised";
 	}
 	
 	public static class ErrorCodes{

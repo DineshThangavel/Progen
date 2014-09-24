@@ -36,6 +36,9 @@ public class CommandFactory {
 		cmdMapper.put(CommandInputText.SIMULATE, new StartSimulation());
 		cmdMapper.put(CommandInputText.CHANGE_INPUT_FOR_SIMULATION, new ChangeInputSimulatorValueCommand());
 		cmdMapper.put(CommandInputText.ADD_INPUT_STIMULUS, new AddInputStimulusCommand());
+		cmdMapper.put(CommandInputText.NEW_REGISTER_COMMAND, new NewRegisterCommand());
+		cmdMapper.put(CommandInputText.GET_SIGNALBUS_VALUE, new GetSignalBusValueCommand());
+		cmdMapper.put(CommandInputText.CONNECT_TO_CLOCK, new ConnectToClockCommand());
 	}
 
 	public Command makeCommand(String userInputText)

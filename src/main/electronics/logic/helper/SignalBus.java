@@ -162,4 +162,24 @@ public class SignalBus {
 		    listener.add(newListener);
 		  }
 
+	public String getDisplayValue() {
+		StringBuilder displayString = new StringBuilder();
+		Signal[] busValue = this.getValue();
+		
+		for(int i=0;i<busValue.length;i++){
+			if(busValue[i].equals(Signal.HIGH)){
+				displayString.append("H");
+			}
+			else if(busValue[i].equals(Signal.LOW)){
+				displayString.append("L");
+			}
+			
+			else{
+				displayString.append("Z");
+			}
+		}
+		
+		return displayString.toString();
+	}
+
 }

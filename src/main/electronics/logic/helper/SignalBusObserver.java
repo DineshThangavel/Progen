@@ -100,4 +100,11 @@ public class SignalBusObserver implements PropertyChangeListener{
 	public List<SignalValueRecord> getSignalValueRecords(){
 		return this.signalLogValues;
 	}
+	
+	/*
+	 *  Returns the list of connections updated by observer
+	 */
+	public List<Connection> getConnectionsUpdatedByObserver(){
+		return this.connectionsToUpdate;
+	}
 }

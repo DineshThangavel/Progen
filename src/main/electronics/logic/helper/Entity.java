@@ -28,6 +28,7 @@ public class Entity {
 	private String id;
 	private String name;
 	private Entity parentEntity;
+	private EntityTriggerType entityTriggerType;
 	
 	private List<SignalBus> inputList = new ArrayList<SignalBus>();
 	private List<SignalBus> outputList = new ArrayList<SignalBus>();
@@ -282,6 +283,20 @@ public class Entity {
 	
 	public EntitySimulator getEntitySimulator(){
 		return this.entitySim;
+	}
+	
+	public EntityTriggerType getEntityTriggerType() {
+		return entityTriggerType;
+	}
+
+	public void setEntityTriggerType(EntityTriggerType entityTriggerType) {
+		this.entityTriggerType = entityTriggerType;
+	}
+	
+	public enum EntityTriggerType{
+		NON_CLOCKED,
+		RISING_EDGE_TRIGGERED,
+		FALLING_EDGE_TRIGGERED;
 	}
 	
 }

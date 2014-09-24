@@ -13,6 +13,7 @@
       <class name="commands.SimpleSimulationTestWithAndGate"/>
       <class name="commands.SimpleSimulationTestWithOrGate"/>
       <class name="commands.SimpleSimulationWithTwoEntities"/>
+      <class name="commands.RegisterSimulationTest"/>
     </classes>
   </test> <!-- Test -->
 </suite> <!-- Suite -->

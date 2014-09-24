@@ -44,7 +44,7 @@ public class ChangeInputSimulatorValueCommand implements Command{
 		signalToModify.setValue(newTemporarySignalBus.getValue());
 		inputSimToChange.setValue(newTemporarySignalBus.getValue());
 		
-		return null;
+		return Consts.CommandResults.SUCCESS_CHANGED_SIMULATOR_VALUE;
 	}
 
 }
