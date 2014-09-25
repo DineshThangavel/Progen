@@ -51,6 +51,7 @@ public class Consts {
 		public static final String NEW_REGISTER_COMMAND = "new_register";
 		public static final String GET_SIGNALBUS_VALUE = "get_signalbus_value";
 		public static final String CONNECT_TO_CLOCK = "connect_to_clock";
+		public static final String EXPORT_TO_VHDL = "export_to_vhdl";
 	}
 	
 	public static class CommandResults{
@@ -71,6 +72,7 @@ public class Consts {
 		public static final String SUCCESS_CHANGED_SIMULATOR_VALUE = "Successfully changed simulator value";
 		public static final String CLOCK = "Clock-";
 		public static final String SUCCESS_NEW_REGISTER_CREATION = "Successfully created new Register with Id ";
+		public static final String SUCCESS_EXPORT_TO_VHDL = "Successfully exportd to VHDL";
 	}
 	
 	public static class ExceptionMessages{
@@ -87,6 +89,7 @@ public class Consts {
 		public static final String ENTITY_NOT_FOUND ="Entity with given Id could not be found";
 		public static final String INPUT_NOT_RECOGNISED = "The Input could not be recognised";
 		public static final String INCORRECT_TRIGGER_TYPE = "The trigger type could not be recognised";
+		public static final String UNABLE_TO_WRITE_TO_FILE = "Unable to write to file ";
 	}
 	
 	public static class ErrorCodes{

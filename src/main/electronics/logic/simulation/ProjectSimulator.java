@@ -30,11 +30,13 @@ public class ProjectSimulator extends Simulator{
 	
 	float currentTime; // maintains the sense of time across all units
 	List<Float> debugPointsInTime = new ArrayList<Float>();
-	List<CircuitStimulus> inputCommandTreeForSimulation = new ArrayList<CircuitStimulus>();
+	List<CircuitStimulus> inputCommandListForSimulation = new ArrayList<CircuitStimulus>();
 	LogicFacade logicInterface = new LogicFacade();
 	
-	// key is name of the inputSimulator
+	// keeps track of the simulator name and which signalBus it simulates
 	HashMap<String,SignalBus> inputSimulationConnectionDirectory = new HashMap<String,SignalBus>();
+	
+	// keeps track of the simulator name and a reference to the simulator 
 	HashMap<String,InputSimulator> inputSimulationDirectory = new HashMap<String,InputSimulator>();
 	
 	HashMap<String,SignalBus> signalsConnectedToProjectClk = new HashMap<String,SignalBus>();
@@ -54,10 +56,10 @@ public class ProjectSimulator extends Simulator{
 		projectClock.setValue(Signal.HIGH);
 		
 		int debugTimeIndex = 0;
-		Iterator<CircuitStimulus> inputStimulusIterator = inputCommandTreeForSimulation.iterator();
+		Iterator<CircuitStimulus> inputStimulusIterator = inputCommandListForSimulation.iterator();
 		
 		CircuitStimulus nextStimulus = null;
-		if(inputCommandTreeForSimulation.size() >0 ){
+		if(inputCommandListForSimulation.size() >0 ){
 			nextStimulus = (CircuitStimulus) inputStimulusIterator.next();
 		}
 		
@@ -151,6 +153,6 @@ public class ProjectSimulator extends Simulator{
 	}
 	
 	public void addInputStimulus(CircuitStimulus circuitStimulusToAdd){
-		this.inputCommandTreeForSimulation.add(circuitStimulusToAdd);
+		this.inputCommandListForSimulation.add(circuitStimulusToAdd);
 	}
 }

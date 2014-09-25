@@ -107,4 +107,16 @@ public class SignalBusObserver implements PropertyChangeListener{
 	public List<Connection> getConnectionsUpdatedByObserver(){
 		return this.connectionsToUpdate;
 	}
+
+	public boolean isEntitySimulatorListenerPresent(
+			EntitySimulator entitySimulator) {
+		
+		for(EntitySimulator entitySimulatorPresent : entitySimulatorListeners){
+			if(entitySimulatorPresent == entitySimulator){
+				return true;
+			}
+		}
+		
+		return false;
+	}
 }

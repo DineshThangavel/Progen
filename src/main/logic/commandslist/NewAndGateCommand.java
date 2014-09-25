@@ -5,6 +5,8 @@ package logic.commandslist;
 
 import electronics.logic.entities.AndGate;
 import electronics.logic.helper.ElectronicsLogicFacade;
+import electronics.logic.helper.Entity;
+import electronics.logic.helper.EntityManager;
 import helper.Consts;
 import helper.ProcGenException;
 import logic.UndoableCommand;
@@ -24,6 +26,7 @@ public class NewAndGateCommand implements UndoableCommand{
 		
 		String[] splitArguments = arguments.split("\\s+");
 		String nameOfGate = "";
+		String parentId = ""; 
 		int noOfInputs = 2;
 		if(splitArguments.length > 0){
 			nameOfGate = splitArguments[0];
@@ -33,8 +36,22 @@ public class NewAndGateCommand implements UndoableCommand{
 			noOfInputs = Integer.parseInt(splitArguments[1]);
 		}
 		
+		if(splitArguments.length > 2){
+			parentId = splitArguments[2];
+		}
+		
 		AndGate newAndGate = new AndGate("", nameOfGate,noOfInputs);
+		if(parentId.length()>0){
+			EntityManager entityManager = activeAppDetails.getActivePrjectInstance().getEntityManager();
+			Entity parentEntity = entityManager.getEntityById(parentId);
+			if(parentEntity != null)
+				newAndGate.setParent(parentEntity);
+			else{
+				throw new ProcGenException(Consts.ExceptionMessages.ENTITY_NOT_FOUND);
+			}
+		}
 		String entityId = activeAppDetails.getActivePrjectInstance().getEntityManager().addEntity(newAndGate);
+
 		return Consts.CommandResults.SUCCESS_NEW_AND_CREATION + entityId;
 	}
 
