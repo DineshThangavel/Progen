@@ -14,6 +14,8 @@
       <class name="commands.SimpleSimulationTestWithOrGate"/>
       <class name="commands.SimpleSimulationWithTwoEntities"/>
       <class name="commands.RegisterSimulationTest"/>
+      <class name="commands.SimpleSimulationWithChildEntities"/> 
+      <class name="commands.MuxSimulationTest"/>
     </classes>
   </test> <!-- Test -->
 </suite> <!-- Suite -->

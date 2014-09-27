@@ -52,6 +52,7 @@ public class Consts {
 		public static final String GET_SIGNALBUS_VALUE = "get_signalbus_value";
 		public static final String CONNECT_TO_CLOCK = "connect_to_clock";
 		public static final String EXPORT_TO_VHDL = "export_to_vhdl";
+		public static final String NEW_MUX = "new_mux";
 	}
 	
 	public static class CommandResults{
@@ -73,6 +74,7 @@ public class Consts {
 		public static final String CLOCK = "Clock-";
 		public static final String SUCCESS_NEW_REGISTER_CREATION = "Successfully created new Register with Id ";
 		public static final String SUCCESS_EXPORT_TO_VHDL = "Successfully exportd to VHDL";
+		public static final String SUCCESS_NEW_MUX_CREATION = "Successfully created a new multiplexer";
 	}
 	
 	public static class ExceptionMessages{

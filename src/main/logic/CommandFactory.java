@@ -40,6 +40,7 @@ public class CommandFactory {
 		cmdMapper.put(CommandInputText.GET_SIGNALBUS_VALUE, new GetSignalBusValueCommand());
 		cmdMapper.put(CommandInputText.CONNECT_TO_CLOCK, new ConnectToClockCommand());
 		cmdMapper.put(CommandInputText.EXPORT_TO_VHDL, new ExportToVhdl());
+		cmdMapper.put(CommandInputText.NEW_MUX, new NewMultiplexerCommand());
 	}
 
 	public Command makeCommand(String userInputText)

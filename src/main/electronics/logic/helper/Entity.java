@@ -239,6 +239,30 @@ public class Entity {
 		return allPortsNameList;
 	}
 	
+	public List<String> getInputPortNames(){
+		List<String> inputPortNamesList = new ArrayList<String>();
+		
+		List<SignalBus> inputSignalList = this.getInputPortList();
+		
+		for(SignalBus input: inputSignalList){
+			inputPortNamesList.add(input.getName());
+		}
+		
+		return inputPortNamesList;
+	}
+	
+	public List<String> getOutputPortNames(){
+		List<String> outputPortNamesList = new ArrayList<String>();
+		
+		List<SignalBus> outputSignalList = this.getOutputPortList();
+		
+		for(SignalBus input: outputSignalList){
+			outputPortNamesList.add(input.getName());
+		}
+		
+		return outputPortNamesList;
+	}
+	
 	public boolean isSignalPresentInInputByName(String name){
 		for(SignalBus inputSignal : inputList){
 			if(inputSignal.getName().equals(name)){

@@ -10,6 +10,7 @@ import java.util.List;
 
 import helper.Consts;
 import helper.InvalidSignalException;
+import helper.ProcGenException;
 
 /**
  * @author DINESH THANGAVEL
@@ -61,6 +62,8 @@ public class SignalBus {
 	
 	public boolean setValue(Signal valueToSet[])
 			throws InvalidSignalException {
+		
+		assert(valueToSet != null);
 		
 		// copy the current value before changing it
 		Signal[] previousSignalValue = new Signal[this.value.length];
@@ -180,6 +183,26 @@ public class SignalBus {
 		}
 		
 		return displayString.toString();
+	}
+	
+	static public Signal[] getSignalArrayFromString(String signalValue) throws ProcGenException{
+		Signal[] signalValueArray = new Signal[signalValue.length()];
+		
+		for(int i=0;i<signalValue.length();i++){
+			String c = signalValue.substring(i, i+1);
+			
+			if(c.equals("1")){
+				signalValueArray[i] = Signal.HIGH;
+			}
+			
+			else if(c.equals("0")){
+				signalValueArray[i] = Signal.LOW;
+			}
+			
+			else
+				throw new ProcGenException(Consts.ExceptionMessages.INPUT_NOT_RECOGNISED);
+		}
+		return signalValueArray;
 	}
 
 }
