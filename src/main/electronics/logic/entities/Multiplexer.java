@@ -3,12 +3,14 @@
  */
 package electronics.logic.entities;
 
-import java.util.HashMap;
-
+import hdl.translator.logic.HdlConsts.HdlConversionType;
+import hdl.translator.logic.HdlConverter;
 import helper.InvalidSignalException;
 import helper.ProcGenException;
+
+import java.util.HashMap;
+
 import electronics.logic.helper.Entity;
-import electronics.logic.helper.Signal;
 import electronics.logic.helper.SignalBus;
 
 /**
@@ -33,6 +35,9 @@ public class Multiplexer extends Entity{
 		
 		// only one output for MUX
 		this.addOutput("output", widthOfInputSignal);
+
+		this.setHdlConversionType(HdlConversionType.InlineConversion);
+
 	}
 	
 	public void programMux(String selectionSignalBusValue, String inputSignalName){
@@ -57,6 +62,10 @@ public class Multiplexer extends Entity{
 			this.getOutputPortList().get(0).setValue(inputSignal.getValue());
 		}
 	}
-	
+
+	@Override
+	public Object convertToHdl(HdlConverter hdlConverter){
+		return hdlConverter.convertMux(this);
+	}
 
 }

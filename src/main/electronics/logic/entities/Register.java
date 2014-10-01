@@ -3,6 +3,8 @@
  */
 package electronics.logic.entities;
 
+import hdl.translator.logic.HdlConverter;
+import hdl.translator.logic.HdlConsts.HdlConversionType;
 import helper.Consts;
 import helper.InvalidSignalException;
 import helper.ProcGenException;
@@ -41,6 +43,7 @@ public class Register extends Entity{
 			throw new ProcGenException(Consts.ExceptionMessages.INCORRECT_TRIGGER_TYPE);
 		}
 		
+		this.setHdlConversionType(HdlConversionType.InlineConversion);
 	}
 	
 	public void defaultBehaviour() throws InvalidSignalException{
@@ -58,5 +61,10 @@ public class Register extends Entity{
 			SignalBus inputForRegister = this.getInputByName("input0");
 			this.getOutputByName("output").setValue(inputForRegister.getValue());		 
 		}
+	}
+	
+	@Override
+	public Object convertToHdl(HdlConverter hdlConverter){
+		return hdlConverter.convertRegister(this);
 	}
 }

@@ -3,10 +3,11 @@
  */
 package electronics.logic.entities;
 
+import hdl.translator.logic.HdlConsts.HdlConversionType;
+import hdl.translator.logic.HdlConverter;
 import helper.InvalidSignalException;
 import helper.ProcGenException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import electronics.logic.helper.Entity;
@@ -37,6 +38,8 @@ public class AndGate extends Entity{
 		
 		// only one output for AND gate
 		this.addOutput("output", signalBusWidth);
+		
+		this.setHdlConversionType(HdlConversionType.InlineConversion);
 	}
 	
 	public AndGate(String id, String name,int noOfInputs, int signalBusWidth) throws ProcGenException {
@@ -80,5 +83,9 @@ public class AndGate extends Entity{
 
 	}
 	
+	@Override
+	public Object convertToHdl(HdlConverter hdlConverter){
+		return hdlConverter.convertAndGate(this);
+	}
 
 }

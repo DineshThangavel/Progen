@@ -3,6 +3,8 @@
  */
 package electronics.logic.entities;
 
+import hdl.translator.logic.HdlConverter;
+import hdl.translator.logic.HdlConsts.HdlConversionType;
 import helper.InvalidSignalException;
 import helper.ProcGenException;
 
@@ -37,6 +39,8 @@ public class OrGate extends Entity {
 		
 		// only one output for OR gate
 		this.addOutput("output", signalBusWidth);
+		
+		this.setHdlConversionType(HdlConversionType.InlineConversion);
 	}
 
 	public OrGate(String id, String name,int noOfInputs, int signalBusWidth) throws ProcGenException {
@@ -76,5 +80,10 @@ public class OrGate extends Entity {
 		}
 		
 		this.getOutputPortList().get(0).setValue(orGateOutput.getValue());
+	}
+	
+	@Override
+	public Object convertToHdl(HdlConverter hdlConverter){
+		return hdlConverter.convertOrGate(this);
 	}
 }

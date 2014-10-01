@@ -4,15 +4,15 @@
  */
 package electronics.logic.helper;
 
+import hdl.translator.logic.HdlConsts.HdlConversionType;
+import hdl.translator.logic.HdlConverter;
 import helper.Consts;
 import helper.ProcGenException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import electronics.logic.simulation.EntitySimulator;
-import electronics.logic.simulation.Simulator;
 
 /**
  * @author DINESH THANGAVEL
@@ -38,12 +38,15 @@ public class Entity {
 	private EntityConnectionManager entityConnectionManager = new EntityConnectionManager(this);
 	private EntitySimulator entitySim = new EntitySimulator(this);
 	
+	// this attribute keeps track of whether the entity should be converted to a standalone entity
+	private HdlConversionType hdlConversionType;
+
 	// This type of entity can be created and no valid id is present
 	public Entity(String name){
 		this.id = "";
 		this.name = name;
 		this.parentEntity = null;
-		
+		this.hdlConversionType = HdlConversionType.SeparateEntity;
 	}
 	
 	// Entity which have id are only assigned by entity manager
@@ -52,6 +55,7 @@ public class Entity {
 		this.id = id;
 		this.name = name;
 		this.parentEntity = null;
+		this.hdlConversionType = HdlConversionType.SeparateEntity;
 	}
 
 	// Deep Copy Constructor method for entity
@@ -134,6 +138,14 @@ public class Entity {
 		}
 
 		return signalToReturn;
+	}
+	
+	public HdlConversionType getHdlConversionType() {
+		return hdlConversionType;
+	}
+
+	public void setHdlConversionType(HdlConversionType hdlConversionType) {
+		this.hdlConversionType = hdlConversionType;
 	}
 
 	/**
@@ -322,5 +334,8 @@ public class Entity {
 		RISING_EDGE_TRIGGERED,
 		FALLING_EDGE_TRIGGERED;
 	}
-	
+
+	public Object convertToHdl(HdlConverter hdlConverter){
+		return "";
+	}
 }

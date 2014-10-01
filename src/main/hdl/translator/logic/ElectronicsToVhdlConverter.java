@@ -3,6 +3,8 @@
  */
 package hdl.translator.logic;
 
+import hdl.translator.logic.HdlConsts.HdlConversionType;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -10,6 +12,7 @@ import de.upb.hni.vmagic.AssociationElement;
 import de.upb.hni.vmagic.VhdlFile;
 import de.upb.hni.vmagic.builtin.StdLogic1164;
 import de.upb.hni.vmagic.concurrent.ComponentInstantiation;
+import de.upb.hni.vmagic.concurrent.ConcurrentStatement;
 import de.upb.hni.vmagic.declaration.Component;
 import de.upb.hni.vmagic.libraryunit.Architecture;
 import de.upb.hni.vmagic.libraryunit.Entity;
@@ -78,6 +81,7 @@ public class ElectronicsToVhdlConverter {
 			}
 		}
 
+		
 		return entity;
 	}
 
@@ -89,22 +93,36 @@ public class ElectronicsToVhdlConverter {
 
 		List<electronics.logic.helper.Entity> baseEntitiesList = em
 				.getBaseEntities();
-		// component declarations
+		
+		HdlConverter entityToVhdlConverter  = new EntityToVhdlConverter();
+		
 		for (electronics.logic.helper.Entity baseEntity : baseEntitiesList) {
-			// recursive function that creates vhdl file for all sub-entities
-			createVhdlFileForEntity(baseEntity, outputFolderPath);
-			Entity vMagicEntity = this
-					.createVMagicEntityForProgenEntity(baseEntity);
-			Component componentDeclaration = new Component(vMagicEntity);
+			// for entities that are wanted in a separate file -component declarations needed
+			if(baseEntity.getHdlConversionType().equals(HdlConversionType.SeparateEntity))
+			{
+				// recursive function that creates vhdl file for all sub-entities
+				createVhdlFileForEntity(baseEntity, outputFolderPath);
+				Entity vMagicEntity = this
+						.createVMagicEntityForProgenEntity(baseEntity);
+				Component componentDeclaration = new Component(vMagicEntity);
 
-			// component instantiations
-			ComponentInstantiation compInstance = new ComponentInstantiation(
-					componentDeclaration.getIdentifier(), componentDeclaration);
-			compInstance.getPortMap().add(
-					new AssociationElement(new Signal("CLK", Signal.Mode.IN,
-							StdLogic1164.STD_LOGIC)));
-			architecture.getDeclarations().add(componentDeclaration);
-			architecture.getStatements().add(compInstance);
+				// component instantiations
+				ComponentInstantiation compInstance = new ComponentInstantiation(
+						componentDeclaration.getIdentifier(), componentDeclaration);
+				compInstance.getPortMap().add(
+						new AssociationElement(new Signal("CLK", Signal.Mode.IN,
+								StdLogic1164.STD_LOGIC)));
+				architecture.getDeclarations().add(componentDeclaration);
+				architecture.getStatements().add(compInstance);
+			}
+			
+			else if(baseEntity.getHdlConversionType().equals(HdlConversionType.InlineConversion)){
+				
+				Object elementToAdd= baseEntity.convertToHdl(entityToVhdlConverter);
+				
+				architecture.getStatements().add((ConcurrentStatement) elementToAdd);
+			}
+			
 		}
 
 		return architecture;
