@@ -28,9 +28,9 @@ public class EntityToVhdlConverter implements HdlConverter {
 		SignalBus input2 = andGate.getInputPortList().get(1);
 		SignalBus output1 = andGate.getOutputPortList().get(0);
 
-		String input1Name = andGate.getId() + "_" + input1.getName();
-		String input2Name = andGate.getId() + "_" + input2.getName();
-		String outputName = andGate.getId() + "_" + output1.getName();
+		String input1Name = andGate.getName() + andGate.getId() + "_" + input1.getName();
+		String input2Name = andGate.getName() + andGate.getId() + "_" + input2.getName();
+		String outputName = andGate.getName() + andGate.getId() + "_" + output1.getName();
 
 		Signal andInput1 = new Signal(input1Name, null);
 		Signal andInput2 = new Signal(input2Name, null);
@@ -55,11 +55,11 @@ public class EntityToVhdlConverter implements HdlConverter {
 
 		SignalBus input1 = orGate.getInputPortList().get(0);
 		SignalBus input2 = orGate.getInputPortList().get(1);
-		SignalBus output1 = orGate.getInputPortList().get(0);
+		SignalBus output1 = orGate.getOutputPortList().get(0);
 
-		String input1Name = orGate.getId() + "_" + input1.getName();
-		String input2Name = orGate.getId() + "_" + input2.getName();
-		String outputName = orGate.getId() + "_" + output1.getName();
+		String input1Name = orGate.getName() + orGate.getId() + "_" + input1.getName();
+		String input2Name = orGate.getName() + orGate.getId() + "_" + input2.getName();
+		String outputName = orGate.getName() + orGate.getId() + "_" + output1.getName();
 
 		Signal orInput1 = new Signal(input1Name, null);
 		Signal orInput2 = new Signal(input2Name, null);

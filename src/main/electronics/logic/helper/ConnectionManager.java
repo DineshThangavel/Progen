@@ -235,4 +235,19 @@ public class ConnectionManager {
 		
 		return signalConnectionMapping;
 	}
+	
+	public List<Connection> getAllConnectionsInEntityAsList(String entityId){
+		
+		HashMap<String,List<Connection>> connectionListForSignals = this.connectionDirectory.get(entityId);
+		List<Connection> allConnectionsList = new ArrayList<Connection>();
+		
+		for (String signalName:connectionListForSignals.keySet()){
+			List<Connection> connectionList = this.connectionDirectory.get(entityId).get(signalName);
+			if(connectionList != null){
+				allConnectionsList.addAll(connectionList);
+			}
+		}
+		
+		return allConnectionsList;
+	}
 }

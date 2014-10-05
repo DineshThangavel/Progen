@@ -24,11 +24,12 @@ public class NewAndGateCommand implements UndoableCommand{
 			return Consts.CommandResults.CREATE_PROJECT_BEFORE_ENTITY;
 		}
 		
+		// TODO: clean the arguments validation
 		String[] splitArguments = arguments.split("\\s+");
-		String nameOfGate = "";
+		String nameOfGate = "And";
 		String parentId = ""; 
 		int noOfInputs = 2;
-		if(splitArguments.length > 0){
+		if(splitArguments[0].length() > 0){
 			nameOfGate = splitArguments[0];
 		}	
 		

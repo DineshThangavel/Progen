@@ -24,11 +24,13 @@ public class NewOrGateCommand implements UndoableCommand {
 			return Consts.CommandResults.CREATE_PROJECT_BEFORE_ENTITY;
 		}
 		
+		// TODO : Clean the arguments validation and assignment
+		
 		String[] splitArguments = arguments.split("\\s+");
-		String nameOfGate = "";
+		String nameOfGate = "Or";
 		String parentId = ""; 
 		int noOfInputs = 2;
-		if(splitArguments.length > 0){
+		if(splitArguments[0].length() > 0){
 			nameOfGate = splitArguments[0];
 		}	
 		
