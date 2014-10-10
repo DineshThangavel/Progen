@@ -3,19 +3,16 @@ package commands;
 import hdl.translator.logic.ElectronicsToVhdlConverter;
 import helper.ProcGenException;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 import logic.LogicFacade;
 
-import org.apache.commons.io.FileUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import vhdlOutputTests.TestUtils;
 import electronics.logic.helper.Connection;
 import electronics.logic.helper.ElectronicsLogicFacade;
 import electronics.logic.helper.Project;
@@ -115,19 +112,8 @@ public class SimpleSimulationWithTwoEntities {
 										
 					System.out.println(testProject.getEntityManager().getEntityById("1").getOutputByName("output").getValue());
 					
-					String actualOutputFileName = TestUtils.OutputFolderDirectory + "\\" + testProject.getName() + ".vhd";
-					String baselineFileName = TestUtils.BaselineFolderDirectory + "\\" + "ConnectedOrAndGates.bsl";
-					
-					File actualOutputFile = new File(actualOutputFileName);
-					File baselineFile = new File(baselineFileName);
-					
-					Assert.assertEquals(FileUtils.readLines(actualOutputFile), FileUtils.readLines(baselineFile));
-					
 				} catch (ProcGenException e) {
 					System.out.println(e.getMessage());
-					Assert.fail();
-					e.printStackTrace();
-				} catch (IOException e) {
 					Assert.fail();
 					e.printStackTrace();
 				}

@@ -16,6 +16,9 @@
       <class name="commands.RegisterSimulationTest"/>
       <class name="commands.SimpleSimulationWithChildEntities"/> 
       <class name="commands.MuxSimulationTest"/>
+      <class name="vhdlOutputTests.AndGateToVhdlTest"/>
+      <class name="vhdlOutputTests.TestConnectedGatesVhdlConversion"/>
+      <class name="vhdlOutputTests.TestParentChildConvertionToVhdl"/>
     </classes>
   </test> <!-- Test -->
 </suite> <!-- Suite -->
