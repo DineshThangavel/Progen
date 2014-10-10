@@ -3,17 +3,10 @@
  */
 package hdl.translator.logic;
 
-import java.util.List;
-
-import de.upb.hni.vmagic.AssociationElement;
 import de.upb.hni.vmagic.concurrent.AbstractProcessStatement;
 import de.upb.hni.vmagic.concurrent.ComponentInstantiation;
 import de.upb.hni.vmagic.concurrent.ConcurrentStatementVisitor;
 import de.upb.hni.vmagic.concurrent.ConditionalSignalAssignment;
-import de.upb.hni.vmagic.expression.Expression;
-import de.upb.hni.vmagic.object.Signal;
-import de.upb.hni.vmagic.object.VhdlObject.Mode;
-import de.upb.hni.vmagic.statement.SequentialStatement;
 
 /**
  * @author DINESH THANGAVEL

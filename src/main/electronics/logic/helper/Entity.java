@@ -94,6 +94,10 @@ public class Entity {
 		return this.id;
 	}
 	
+	public String getIdForHdlCode(){
+		return this.id.replace("-", "_");
+	}
+	
 	public String getName() {
 		return this.name;
 	}

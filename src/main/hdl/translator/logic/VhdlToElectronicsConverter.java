@@ -29,14 +29,12 @@ import de.upb.hni.vmagic.libraryunit.Architecture;
 import de.upb.hni.vmagic.libraryunit.Entity;
 import de.upb.hni.vmagic.object.Signal;
 import de.upb.hni.vmagic.object.Variable;
-import de.upb.hni.vmagic.object.VhdlObject.Mode;
 import de.upb.hni.vmagic.parser.VhdlParser;
 import de.upb.hni.vmagic.parser.VhdlParserException;
 import de.upb.hni.vmagic.statement.SequentialStatement;
 import de.upb.hni.vmagic.util.VhdlCollections;
 import electronics.logic.helper.ElectronicsLogicFacade;
 import electronics.logic.helper.Project;
-import electronics.logic.helper.SignalBus;
 
 /**
  * @author DINESH THANGAVEL

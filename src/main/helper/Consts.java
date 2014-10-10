@@ -92,6 +92,7 @@ public class Consts {
 		public static final String INPUT_NOT_RECOGNISED = "The Input could not be recognised";
 		public static final String INCORRECT_TRIGGER_TYPE = "The trigger type could not be recognised";
 		public static final String UNABLE_TO_WRITE_TO_FILE = "Unable to write to file ";
+		public static final String UNCONNECTED_INPUT_FOUND_IN = " Unconnected Signal/s exists in entity ";
 	}
 	
 	public static class ErrorCodes{

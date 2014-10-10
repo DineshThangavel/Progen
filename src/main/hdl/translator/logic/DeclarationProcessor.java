@@ -5,17 +5,14 @@ package hdl.translator.logic;
 
 import java.util.List;
 
-import de.upb.hni.vmagic.DeclarativeRegion;
 import de.upb.hni.vmagic.VhdlElement;
 import de.upb.hni.vmagic.declaration.Component;
 import de.upb.hni.vmagic.declaration.DeclarationVisitor;
 import de.upb.hni.vmagic.declaration.SignalDeclaration;
 import de.upb.hni.vmagic.declaration.VariableDeclaration;
 import de.upb.hni.vmagic.libraryunit.Architecture;
-import de.upb.hni.vmagic.libraryunit.Entity;
 import de.upb.hni.vmagic.object.Signal;
 import de.upb.hni.vmagic.object.Variable;
-import de.upb.hni.vmagic.object.VhdlObjectProvider;
 
 /**
  * @author DINESH THANGAVEL

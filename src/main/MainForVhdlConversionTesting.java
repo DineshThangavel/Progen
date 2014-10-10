@@ -35,15 +35,16 @@ public class MainForVhdlConversionTesting {
 			ElectronicsLogicFacade eleLogic = ElectronicsLogicFacade.getInstance();
 			eleLogic.createNewProject("test");
 			Project newProject = eleLogic.getActivePrjectInstance();
-			Entity convertedEntity = converter.convertToProgen("D:\\Processor_Creator\\VhdlHelper\\vhdl_input\\A0088592M_LAB1\\Homework\\case_converter.vhd");
+			Entity convertedEntity = converter.convertToProgen("D:\\Processor_Creator\\VhdlHelper\\vhdl_input\\A0088592M_LAB1\\ClassWork\\counter.vhd");
 			
 			newProject.getEntityManager().addEntity(convertedEntity);
+		
+			converter.processConnectionsInArchitecture(converter.getArchitecture(), convertedEntity, eleLogic.getCustomLibrary(),newProject);
+
 			Command displayEntitiesCommand = new DisplayAllEntities();
 			displayEntitiesCommand.execute(null);
 			
-			converter.processConnectionsInArchitecture(converter.getArchitecture(), convertedEntity);
-			
-			ElectronicsToVhdlConverter e = new ElectronicsToVhdlConverter();
+			ElectronicsToVhdlConverter e = new ElectronicsToVhdlConverter(newProject);
 			e.convertProjectToVhdl(newProject,"D:\\Processor_Creator\\VhdlHelper\\vhdl_output");
 		} catch (ProcGenException e) {
 			// TODO Auto-generated catch block

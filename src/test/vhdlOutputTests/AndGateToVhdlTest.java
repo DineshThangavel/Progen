@@ -1,21 +1,24 @@
-package commands;
-
-import java.io.IOException;
+package vhdlOutputTests;
 
 import hdl.translator.logic.ElectronicsToVhdlConverter;
 import hdl.translator.logic.EntityToVhdlConverter;
 import helper.ProcGenException;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 import logic.LogicFacade;
 
+import org.apache.commons.io.FileUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import de.upb.hni.vmagic.output.VhdlOutput;
 import electronics.logic.entities.AndGate;
 import electronics.logic.helper.ElectronicsLogicFacade;
-import electronics.logic.helper.Entity;
 import electronics.logic.helper.Project;
 
 public class AndGateToVhdlTest {
@@ -29,8 +32,12 @@ public class AndGateToVhdlTest {
 			try {
 				logicInterface.processInput("new_project testProject");
 				testProject = ElectronicsLogicFacade.getInstance().getActivePrjectInstance();
+				TestUtils.clearFilesInOutputFolder();
 			} catch (ProcGenException e) {
 				
+				Assert.fail();
+				e.printStackTrace();
+			} catch (IOException e) {
 				Assert.fail();
 				e.printStackTrace();
 			}
@@ -55,8 +62,16 @@ public class AndGateToVhdlTest {
 					EntityToVhdlConverter e = new EntityToVhdlConverter();
 					System.out.println("Converting And Gate...");
 					
-					ElectronicsToVhdlConverter ec = new ElectronicsToVhdlConverter();
-					ec.convertProjectToVhdl(testProject,"D:\\Processor_Creator\\VhdlHelper\\vhdl_output1");
+					ElectronicsToVhdlConverter ec = new ElectronicsToVhdlConverter(testProject);
+					ec.convertProjectToVhdl(testProject,TestUtils.OutputFolderDirectory);
+
+					String actualOutputFileName = TestUtils.OutputFolderDirectory + "\\" + testProject.getName() + ".vhd";
+					String baselineFileName = TestUtils.BaselineFolderDirectory + "\\" + "AndGateVhdlCode.bsl";
+					
+					File actualOutputFile = new File(actualOutputFileName);
+					File baselineFile = new File(baselineFileName);
+					
+					Assert.assertEquals(FileUtils.readLines(actualOutputFile), FileUtils.readLines(baselineFile));
 				}		
 				catch (ProcGenException e) {
 					Assert.fail();

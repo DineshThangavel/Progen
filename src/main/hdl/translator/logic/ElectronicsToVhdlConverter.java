@@ -6,6 +6,7 @@ package hdl.translator.logic;
 import hdl.translator.logic.HdlConsts.HdlConversionType;
 import helper.Consts;
 import helper.ProcGenException;
+import helper.UnconnectedPortException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,13 +21,16 @@ import de.upb.hni.vmagic.concurrent.ComponentInstantiation;
 import de.upb.hni.vmagic.concurrent.ConcurrentStatement;
 import de.upb.hni.vmagic.concurrent.ConditionalSignalAssignment;
 import de.upb.hni.vmagic.declaration.Component;
+import de.upb.hni.vmagic.declaration.SignalDeclaration;
 import de.upb.hni.vmagic.libraryunit.Architecture;
 import de.upb.hni.vmagic.libraryunit.Entity;
 import de.upb.hni.vmagic.libraryunit.LibraryClause;
 import de.upb.hni.vmagic.libraryunit.LibraryUnit;
 import de.upb.hni.vmagic.libraryunit.UseClause;
 import de.upb.hni.vmagic.object.Signal;
+import de.upb.hni.vmagic.object.VhdlObjectProvider;
 import de.upb.hni.vmagic.output.VhdlOutput;
+import de.upb.hni.vmagic.util.VhdlCollections;
 import electronics.logic.helper.Connection;
 import electronics.logic.helper.ConnectionManager;
 import electronics.logic.helper.EntityManager;
@@ -38,13 +42,26 @@ import electronics.logic.helper.SignalBus;
  * 
  */
 public class ElectronicsToVhdlConverter {
-
+	
+	// This keeps track of whether ports have been connected or left open
+	private HashMap<String,Boolean> unconnectedPortTracker = new HashMap<String,Boolean>();
+	HdlConverter entityToVhdlConverter  = new EntityToVhdlConverter();
+	Project project;
+	
+	public ElectronicsToVhdlConverter(Project project){
+		this.project = project;
+	}
+	
 	public void convertProjectToVhdl(Project project,String outputDirectory) throws IOException, ProcGenException {
 		VhdlFile outputFile = createVhdlFileForBaseProject(project, outputDirectory);
 		String fileName = outputDirectory + "\\" + project.getName() + ".vhd";
 		VhdlOutput.toFile(outputFile, fileName);
 	}
 
+	/*
+	 * Adds vhdl header elements
+	 * 
+	 */
 	private VhdlFile createBasicVhdlFile() {
 		VhdlFile file = new VhdlFile();
 
@@ -56,6 +73,9 @@ public class ElectronicsToVhdlConverter {
 		return file;
 	}
 
+	/*
+	 * This method converts the project into an entity
+	 */
 	private VhdlFile createVhdlFileForBaseProject(Project project,
 			String outputFolderPath) throws IOException, ProcGenException {
 
@@ -71,16 +91,33 @@ public class ElectronicsToVhdlConverter {
 	private Entity createVMagicEntityForProgenEntity(
 			electronics.logic.helper.Entity entityToConvert) {
 		Entity entity = new Entity(entityToConvert.getName() + "_"
-				+ entityToConvert.getId());
+				+ entityToConvert.getIdForHdlCode());
 		for (SignalBus inputSignal : entityToConvert.getInputPortList()) {
-			Signal output = null;
+			Signal input = null;
 			if (inputSignal.getBusWidth() > 1) {
-				output = new Signal(
-						inputSignal.getName(),
+				input = new Signal(
+						entityToConvert.getName() + "_" + entityToConvert.getIdForHdlCode() + "_"  + inputSignal.getName(),
 						Signal.Mode.IN,
 						StdLogic1164.STD_LOGIC_VECTOR(inputSignal.getBusWidth()));
 			} else if (inputSignal.getBusWidth() == 1) {
-				output = new Signal(inputSignal.getName(), Signal.Mode.IN,
+				input = new Signal(entityToConvert.getName() + "_" + entityToConvert.getIdForHdlCode() + "_" + inputSignal.getName(), Signal.Mode.IN,
+						StdLogic1164.STD_LOGIC);
+			}
+
+			if (input != null) {
+				entity.getPort().add(input);
+			}
+		}
+		
+		for (SignalBus outputSignal : entityToConvert.getOutputPortList()) {
+			Signal output = null;
+			if (outputSignal.getBusWidth() > 1) {
+				output = new Signal(
+						entityToConvert.getName() + "_" + entityToConvert.getIdForHdlCode() + "_" + outputSignal.getName(),
+						Signal.Mode.OUT,
+						StdLogic1164.STD_LOGIC_VECTOR(outputSignal.getBusWidth()));
+			} else if (outputSignal.getBusWidth() == 1) {
+				output = new Signal(entityToConvert.getName() + "_" + entityToConvert.getIdForHdlCode() + "_" + outputSignal.getName(), Signal.Mode.OUT,
 						StdLogic1164.STD_LOGIC);
 			}
 
@@ -93,6 +130,9 @@ public class ElectronicsToVhdlConverter {
 		return entity;
 	}
 
+	/*
+	 * creates the architecture for the entity representing entire project
+	 */
 	private LibraryUnit createProjectArchitecture(Entity entity,
 			Project project, String outputFolderPath) throws IOException, ProcGenException {
 
@@ -102,23 +142,24 @@ public class ElectronicsToVhdlConverter {
 		List<electronics.logic.helper.Entity> baseEntitiesList = em
 				.getBaseEntities();
 		
-		HdlConverter entityToVhdlConverter  = new EntityToVhdlConverter();
-		
 		for (electronics.logic.helper.Entity baseEntity : baseEntitiesList) {
 			// for entities that are wanted in a separate file -component declarations needed
-			convertBaseEntity(outputFolderPath, architecture,
+			convertEntityToVhdl(outputFolderPath, architecture,
 					entityToVhdlConverter, baseEntity);
 			
-			convertAllConnectionsInEntity(project, architecture, baseEntity);
+			convertAllConnectionsInHomeProject(project, architecture, baseEntity);
 			
 		}
 
 		return architecture;
 	}
 
-	public void convertBaseEntity(String outputFolderPath,
+	public void convertEntityToVhdl(String outputFolderPath,
 			Architecture architecture, HdlConverter entityToVhdlConverter,
-			electronics.logic.helper.Entity baseEntity) throws IOException {
+			electronics.logic.helper.Entity baseEntity) throws IOException, ProcGenException {
+		
+		// create a new file if the type is Separate Entity
+		
 		if(baseEntity.getHdlConversionType().equals(HdlConversionType.SeparateEntity))
 		{
 			// recursive function that creates vhdl file for all sub-entities
@@ -130,12 +171,20 @@ public class ElectronicsToVhdlConverter {
 			// component instantiations
 			ComponentInstantiation compInstance = new ComponentInstantiation(
 					componentDeclaration.getIdentifier(), componentDeclaration);
-			compInstance.getPortMap().add(
-					new AssociationElement(new Signal("CLK", Signal.Mode.IN,
-							StdLogic1164.STD_LOGIC)));
+			
+			for (VhdlObjectProvider<Signal> sProvider : compInstance.getComponent().getPort()) {
+	            List<Signal> signals = VhdlCollections.getAll(sProvider.getVhdlObjects(), Signal.class);
+	            for (Signal s : signals) {
+	                compInstance.getPortMap().add(new AssociationElement(s.getIdentifier(), s));
+	            }
+
+	        }
+			
 			architecture.getDeclarations().add(componentDeclaration);
 			architecture.getStatements().add(compInstance);
 		}
+		
+		// Write in the same file if the type is Inline conversion
 		
 		else if(baseEntity.getHdlConversionType().equals(HdlConversionType.InlineConversion)){
 			
@@ -143,9 +192,37 @@ public class ElectronicsToVhdlConverter {
 			
 			architecture.getStatements().add((ConcurrentStatement) elementToAdd);
 		}
+		
+		for(SignalBus port: baseEntity.getInputPortList()){
+			String signalName = baseEntity.getName() + "_" + baseEntity.getIdForHdlCode() + "_" + port.getName();
+			Signal signal = null;
+			if(port.getBusWidth() > 1){
+				signal = new Signal(signalName,StdLogic1164.STD_LOGIC_VECTOR(port.getBusWidth()));
+			}
+			
+			else{
+				signal = new Signal(signalName,StdLogic1164.STD_LOGIC);
+			}
+			SignalDeclaration newSignalDeclarationToAdd = new SignalDeclaration(signal);
+			architecture.getDeclarations().add(newSignalDeclarationToAdd);
+		}
+		
+		for(SignalBus port: baseEntity.getOutputPortList()){
+			String signalName = baseEntity.getName() + "_" + baseEntity.getIdForHdlCode() + "_" + port.getName();
+			Signal signal = null;
+			if(port.getBusWidth() > 1){
+				signal = new Signal(signalName,StdLogic1164.STD_LOGIC_VECTOR(port.getBusWidth()));
+			}
+			
+			else{
+				signal = new Signal(signalName,StdLogic1164.STD_LOGIC);
+			}
+			SignalDeclaration newSignalDeclarationToAdd = new SignalDeclaration(signal);
+			architecture.getDeclarations().add(newSignalDeclarationToAdd);
+		}
 	}
 
-	public void convertAllConnectionsInEntity(Project project,
+	public void convertAllConnectionsInHomeProject(Project project,
 			Architecture architecture,
 			electronics.logic.helper.Entity baseEntity) throws ProcGenException {
 		// convert connection to signal assignment
@@ -175,8 +252,8 @@ public class ElectronicsToVhdlConverter {
 			}
 			
 			
-			String sourceSignalName = sourceEntity.getName() + connectionToConvert.getSourceEntityId() + "_" + connectionToConvert.getInputSignal().getName();
-			String destinationSignalName = destinationEntity.getName() + connectionToConvert.getDestinationEntityId() + "_" + connectionToConvert.getOutputSignal().getName();
+			String sourceSignalName = sourceEntity.getName() + "_"  + connectionToConvert.getSourceEntityId().replace("-", "_") + "_" + connectionToConvert.getInputSignal().getName();
+			String destinationSignalName = destinationEntity.getName() + "_" + connectionToConvert.getDestinationEntityId().replace("-", "_") + "_" + connectionToConvert.getOutputSignal().getName();
 			
 			Signal sourceSignal = new Signal(sourceSignalName,null);
 			Signal destinationSignal = new Signal(destinationSignalName,null);
@@ -185,6 +262,10 @@ public class ElectronicsToVhdlConverter {
 					destinationSignal,sourceSignal);
 			assignmentList.add(signalAssignment);
 			VhdlOutput.print(signalAssignment);
+			
+			// update that the port has been connected
+			unconnectedPortTracker.put(connectionToConvert.getSourceEntityId() + "-" + connectionToConvert.getInputSignal().getName(), false);
+			unconnectedPortTracker.put(connectionToConvert.getDestinationEntityId() + "-" + connectionToConvert.getOutputSignal().getName(), false);
 		}
 		
 		return assignmentList;
@@ -192,7 +273,7 @@ public class ElectronicsToVhdlConverter {
 	}
 
 	private void createVhdlFileForEntity(
-			electronics.logic.helper.Entity entityToConvert, String outputFolderPath) throws IOException {
+			electronics.logic.helper.Entity entityToConvert, String outputFolderPath) throws IOException, ProcGenException {
 
 		VhdlFile file = this.createBasicVhdlFile();
 		Entity vMagicEntity = this
@@ -202,24 +283,48 @@ public class ElectronicsToVhdlConverter {
 
 		Architecture architecture = new Architecture("rtl", vMagicEntity);
 		for (electronics.logic.helper.Entity childEntity:entityToConvert.getChildEntityList()){
-			createVhdlFileForEntity(childEntity,outputFolderPath);
-			Entity vMagicChildEntity = this.createVMagicEntityForProgenEntity(childEntity);
-			
-			Component componentDeclaration = new Component(vMagicChildEntity);
 
-			// component instantiations
-			ComponentInstantiation compInstance = new ComponentInstantiation(
-					componentDeclaration.getIdentifier(), componentDeclaration);
-			
-			architecture.getDeclarations().add(componentDeclaration);
-			architecture.getStatements().add(compInstance);
+			convertEntityToVhdl(outputFolderPath, architecture,
+					entityToVhdlConverter, childEntity);
 		}
 		
+		convertAllConnectionsInEntityToVhdl(entityToConvert,architecture);
 		file.getElements().add(architecture);
+		
+		try{
+			// check whether all ports have been connected and resolve them if they are not connected
+			resolveUnconnectedSignals(entityToConvert);
+		}
+		
+		catch(UnconnectedPortException e){
+			List<String> unconnectedPortNames = e.getUnconnectedPortNames();
+			// TODO : ask the user interface to handle the problem
+		}
 		
 		String fileName = outputFolderPath + "\\" + entityToConvert.getName() + ".vhd";
 		VhdlOutput.toFile(file, fileName);
 
+	}
+
+
+	private void convertAllConnectionsInEntityToVhdl(
+			electronics.logic.helper.Entity entityToConvert,
+			Architecture architecture) throws ProcGenException {
+		
+		ConnectionManager cm = entityToConvert.getEntityConnectionManager();
+		List<Connection> allConnectionsList = cm.getAllConnectionsInEntityAsList(entityToConvert.getId());
+		
+		// add connections details about children
+		for(electronics.logic.helper.Entity childEntity: entityToConvert.getChildEntityList()){
+			allConnectionsList.addAll(cm.getAllConnectionsInEntityAsList(childEntity.getId()));
+		}
+		
+		List<ConditionalSignalAssignment> vhdlStatementsList = convertConnectionToVhdl(allConnectionsList,project);
+		for(ConditionalSignalAssignment assignment: vhdlStatementsList){
+			architecture.getStatements().add(assignment);
+		}
+
+		
 	}
 
 	private Entity createBaseProject(Project project) {
@@ -231,4 +336,21 @@ public class ElectronicsToVhdlConverter {
 		return entity;
 	}
 
+	private void resolveUnconnectedSignals(electronics.logic.helper.Entity entityToCheck) throws ProcGenException{
+		
+		assert(entityToCheck != null);
+		List<String> unconnectedPortNames = new ArrayList<String>();
+		
+		for(String portName :entityToCheck.getAllPortsName()){
+			if(unconnectedPortTracker.containsKey(entityToCheck.getId() + "-" + portName));
+				boolean isPortConnected = true;
+			if(!isPortConnected){
+				unconnectedPortNames.add(portName);
+			}
+		}
+		
+		if(unconnectedPortNames.size() > 0){
+			throw new UnconnectedPortException(unconnectedPortNames.size() + Consts.ExceptionMessages.UNCONNECTED_INPUT_FOUND_IN + entityToCheck.getName(),unconnectedPortNames);
+		}
+	}
 }

@@ -34,7 +34,7 @@ public class ExportToVhdl implements Command{
 		
 		Project activeProject = activeAppDetails.getActivePrjectInstance();
 		
-		ElectronicsToVhdlConverter e = new ElectronicsToVhdlConverter();
+		ElectronicsToVhdlConverter e = new ElectronicsToVhdlConverter(activeProject);
 		try {
 			e.convertProjectToVhdl(activeProject,outputDirectory);
 		} catch (IOException e1) {
